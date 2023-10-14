@@ -102,7 +102,7 @@
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Header Files\template-built-ins\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="01_07_cub_RGB.cpp">
+    <ClCompile Include="01_04_poligoane_OLD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

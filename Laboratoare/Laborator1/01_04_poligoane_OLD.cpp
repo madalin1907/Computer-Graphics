@@ -5,7 +5,7 @@
 // | Laboratorul I - 01_04_poligoane_OLD.cpp |
 // ===========================================
 //
-//	Program ce deseneaza mai multe poligoane, folosindu-se tehnicile OLD OpenGL;
+//	Program ce desenaza mai multe poligoane, folosindu-se tehnicile OLD OpenGL;
 //
 //
 //	Biblioteci
@@ -28,6 +28,23 @@ void Initialize(void)
 //  Functia 1 de desenarea a graficii pe ecran;
 void RenderFunction1(void)
 {
+	//	Toate primitivelele definite vor avea specificatiile de mai jos (culoare) pana la o noua schimbare a acestora;
+	glColor3f(0.0, 0.0, 1.0);
+
+	//	Dreptunghi - desenare directa;
+	glRecti(20, 130, 140, 310); 
+	 
+    //	Poligon convex; Desenarea punctelor in 2D, coordonate valori intregi (2i);
+	//  Functia glBegin(arg) primeste un argument care specifica tipul primitivei desenate - poligon;
+	//  Finalizarea desenarii primitivei este marcata de glEnd;
+	glColor3f(1.0, 0.0, 0.0);	//	Se schimba culoarea;
+	glBegin(GL_POLYGON);  
+		glVertex2i(0,0);
+		glVertex2i(100, 10);
+		glVertex2i(200, 120);
+		glVertex2i(155, 290);
+	glEnd();
+
     //	Evantai de triunghiuri;
 	glColor3d(1.0, 0.0, 0.25);  //	Se schimba culoarea;
     glBegin(GL_TRIANGLE_FAN);
@@ -88,6 +105,25 @@ void RenderFunction2(void)
 	glFlush();	//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
 }
 
+//  Functia 3 de desenarea a graficii pe ecran - ilustreaza GL_POLYGON;
+void RenderFunction3(void)
+{
+	//	Toate primitivelele definite vor avea specificatiile de mai jos (culoare) pana la o noua schimbare a acestora;
+	glColor3f(0.0, 0.0, 1.0);
+
+	//	Poligon concav / apelarea GL_POLYGON Desenarea punctelor in 2D, coordonate valori intregi (2i);
+	//  Functia glBegin(arg) primeste un argument care specifica tipul primitivei desenate - poligon;
+	//  Finalizarea desenarii primitivei este marcata de glEnd;
+	//  Poligonul de mai jos NU este convex. Daca veti indica mai intai varful (140, 60) va aparea un alt desen
+	glBegin(GL_POLYGON);
+	glVertex2i(0, 0);
+	glVertex2i(200, 0);
+	glVertex2i(200, 200);
+	glVertex2i(140, 60);
+	glEnd();
+
+	glFlush();	//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
+}
 //	Punctul de intrare in program, se ruleaza rutina OpenGL;
 //	Pentru a se schimba functia de randare, se schimba argumentul glutDisplayFunc();
 int main(int argc, char** argv)
@@ -105,6 +141,9 @@ int main(int argc, char** argv)
 	glutDisplayFunc(RenderFunction1);				//  Desenarea scenei in fereastra; 
 	//	SAU
 	//	glutDisplayFunc(RenderFunction2);
+
+	//	SAU 
+	// 	glutDisplayFunc(RenderFunction3);
 
 	//  Bucla principala de procesare a evenimentelor GLUT (functiile care incep cu glut: glutInit etc.) este pornita;
 	//  Prelucreaza evenimentele si deseneaza fereastra de vizualizare pana cand utilizatorul o inchide;
