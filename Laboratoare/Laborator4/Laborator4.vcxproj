@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9cf84439-4f27-48fb-bb54-8a0b0a530066}</ProjectGuid>
+    <ProjectGuid>{bc075529-48bb-4902-9a2c-ea64a562009f}</ProjectGuid>
     <RootNamespace>Laborator4</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -93,11 +93,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)/lib/x32/GLFW/glfw3.lib;$(ProjectDir)/lib/x32/GLFW/glfw3_mt.lib;$(ProjectDir)/lib/x32/GLFW/glfw3dll.lib;$(ProjectDir)/lib/x32/GL/freeglut.lib;$(ProjectDir)/lib/x32/GL/glew32.lib;$(ProjectDir)/lib/x32/GL/glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lib\x32\GL\freeglut.lib;$(ProjectDir)lib\x32\GL\glew32.lib;$(ProjectDir)lib\x32\GL\glew32s.lib;$(ProjectDir)lib\x32\SOIL\SOIL.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)lib\x32\GL\DLLs\*.dll" "$(OutDir)" &amp;
-xcopy /y /d "$(ProjectDir)lib\x32\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
+xcopy /y /d "$(ProjectDir)lib\x32\GLFW\DLLs\*.dll" "$(OutDir)" &amp;
+xcopy /y /d "$(ProjectDir)lib\x32\SOIL\*.dll" "$(OutDir)" &amp;</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>cd "$(ProjectDir)/lib/x32/GL" &amp; xcopy /c /y *.dll *.lib &amp;
@@ -119,10 +120,12 @@ cd "$(ProjectDir)/lib/x32/SOIL" &amp; xcopy /c /y *.dll *.lib</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)lib\x32\GL\freeglut.lib;$(ProjectDir)lib\x32\GL\glew32.lib;$(ProjectDir)lib\x32\GL\glew32s.lib;$(ProjectDir)lib\x32\SOIL\SOIL.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)lib\x32\GL\DLLs\*.dll" "$(OutDir)" &amp;
-xcopy /y /d "$(ProjectDir)lib\x32\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
+xcopy /y /d "$(ProjectDir)lib\x32\GLFW\DLLs\*.dll" "$(OutDir)" &amp;
+xcopy /y /d "$(ProjectDir)lib\x32\SOIL\*.dll" "$(OutDir)" &amp;</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -136,11 +139,12 @@ xcopy /y /d "$(ProjectDir)lib\x32\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)/lib/x64/GLFW/glfw3.lib;$(ProjectDir)/lib/x64/GLFW/glfw3_mt.lib;$(ProjectDir)/lib/x64/GLFW/glfw3dll.lib;$(ProjectDir)/lib/x64/GL/freeglut.lib;$(ProjectDir)/lib/x64/GL/glew32.lib;$(ProjectDir)/lib/x64/GL/glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lib\x64\GL\freeglut.lib;$(ProjectDir)lib\x64\GL\glew32.lib;$(ProjectDir)lib\x64\GL\glew32s.lib;$(ProjectDir)lib\x64\SOIL\SOIL.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)lib\x64\GL\DLLs\*.dll" "$(OutDir)" &amp;
-xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
+xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;
+xcopy /y /d "$(ProjectDir)lib\x64\SOIL\*.dll" "$(OutDir)" &amp;</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>cd "$(ProjectDir)/lib/x64/GL" &amp; xcopy /c /y *.dll *.lib &amp;
@@ -162,14 +166,16 @@ cd "$(ProjectDir)/lib/x64/SOIL" &amp; xcopy /c /y *.dll *.lib</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)lib\x64\GL\freeglut.lib;$(ProjectDir)lib\x64\GL\glew32.lib;$(ProjectDir)lib\x64\GL\glew32s.lib;$(ProjectDir)lib\x64\SOIL\SOIL.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)lib\x64\GL\DLLs\*.dll" "$(OutDir)" &amp;
-xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
+xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;
+xcopy /y /d "$(ProjectDir)lib\x64\SOIL\*.dll" "$(OutDir)" &amp;</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="04_01_coord_omogene.cpp" />
+    <ClCompile Include="04_05_Cerinta2.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imageloader.cpp" />
@@ -484,6 +490,12 @@ xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
     <None Include="04_02_Shader.vert" />
     <None Include="04_03_Shader.frag" />
     <None Include="04_03_Shader.vert" />
+    <None Include="04_04_Shader.frag" />
+    <None Include="04_04_Shader.vert" />
+    <None Include="04_05_Shader.frag" />
+    <None Include="04_05_Shader.vert" />
+    <None Include="04_06_Shader.frag" />
+    <None Include="04_06_Shader.vert" />
     <None Include="example.frag" />
     <None Include="example.vert" />
     <None Include="include\glm\detail\func_common.inl" />

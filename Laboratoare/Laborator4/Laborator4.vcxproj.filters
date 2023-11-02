@@ -102,7 +102,7 @@
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Header Files\template-built-ins\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="04_01_coord_omogene.cpp">
+    <ClCompile Include="04_05_Cerinta2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1495,6 +1495,24 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="04_03_Shader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_04_Shader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_04_Shader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_05_Shader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_05_Shader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_06_Shader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="04_06_Shader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

@@ -23,7 +23,6 @@ glm::mat4 p2ScaleMatrix, p2TranslationMatrix1, p2TranslationMatrix2; // matricil
 int codCol; //	Variabila ce determina schimbarea culorii pixelilor in shader;
 
 float xMin = 0, xMax = 600, yMin = 0, yMax = 700;//	Variabile pentru proiectia ortogonala;
-float deltax = xMax - xMin, deltay = yMax - yMin; // lungimile laturilor dreptunghiului decupat
 
 const float PI = 3.141592;				//	Valoarea lui PI;
 

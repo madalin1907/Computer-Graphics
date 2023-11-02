@@ -1,19 +1,10 @@
-﻿//
+﻿// ================================================
+//              Grafica pe calculator             |
 // ================================================
-// | Grafica pe calculator                        |
+//       Laboratorul IV - 04_05_Cerinta2.cpp      |
 // ================================================
-// | Laboratorul IV - 04_03_texturare.cpp |
-// ========================================
-// 
-//	Program ce deseneaza un patrat, caruia i se aplica o textura, folosindu-se tehnicile MODERN OpenGL;
-//	ELEMENTE DE NOUTATE:
-//	- utilizarea texturilor;
-//	- folosirea unor functii de amestecare in shaderul de fragment;
-//	- functii pentru reperul de vizualizare (glm::lookAt) si pentru proiectii.
-//
-//
+
 //	Biblioteci
-//
 #include <windows.h>        //	Utilizarea functiilor de sistem Windows (crearea de ferestre, manipularea fisierelor si directoarelor);
 #include <stdlib.h>         //  Biblioteci necesare pentru citirea shaderelor;
 #include <stdio.h>
@@ -23,73 +14,18 @@
 							//  - desenarea de primitive grafice precum dreptunghiuri, cercuri sau linii, 
 							//  - crearea de meniuri si submeniuri;
 #include "loadShaders.h"	//	Fisierul care face legatura intre program si shadere;
+#include "SOIL.h"			//	Biblioteca pentru texturare;
 #include "glm/glm.hpp"		//	Bibloteci utilizate pentru transformari grafice;
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "SOIL.h"			//	Biblioteca pentru texturare;
 
-GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, viewLocation, projLocation, matrRotlLocation, codColLocation, texture; //  Identificatorii obiectelor de tip OpenGL;
+GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, drawCodeLocation, texture;	//  Identificatorii obiectelor de tip OpenGL;
+glm::mat4 myMatrix, resizeMatrix, scaleMatrix, translationMatrix;	 //	 Variabile catre matricile de transformare;
 
-GLfloat winWidth = 1200, winHeight = 900; //	Dimensiunile ferestrei de afisare;
-
-glm::mat4 myMatrix, matrRot; //	Variabile catre matricile de transformare;
-
-
-int codCol;	//	Variabila ce determina schimbarea culorii pixelilor in shader;					
-const float PI = 3.141592; //	Valoarea lui pi;
-
-//	Elemente pentru matricea de vizualizare;
-float obsX = 0.0, obsY = 0.0, obsZ = 800.f;
-float refX = 0.0f, refY = 0.0f;
-float vX = 0.0;
-glm::mat4 view;
-//	Elemente pentru matricea de proiectie;
-float width = 800, height = 600, xMin = -800.f, xMax = 800, yMin = -600, yMax = 600, zNear = 0, zFar = 1000, fov = 45;
-glm::mat4 projection;
-
-void ProcessNormalKeys(unsigned char key, int x, int y)
-{
-	switch (key) 
-	{
-	case 'l':		//	Apasarea tastelor `l` si `r` modifica pozitia verticalei in planul de vizualizare;
-		vX += 0.1;
-		break;
-	case 'r':
-		vX -= 0.1;
-		break;
-	case '+':		//	Apasarea tastelor `+` si `-` schimba pozitia observatorului (se departeaza / aproprie);
-		//zNear += 10;
-		//zFar += 10;
-		obsZ += 10;
-		break;
-	case '-':
-		//zNear -= 10;
-		//zFar -= 10;
-		obsZ -= 10;
-		break;
-	}
-	if (key == 27)
-		exit(0);
-}
-
-void ProcessSpecialKeys(int key, int x, int y) {
-	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN';
-	{						//	duce la deplasarea observatorului pe axele Ox si Oy;
-	case GLUT_KEY_LEFT:
-		obsX -= 20;
-		break;
-	case GLUT_KEY_RIGHT:
-		obsX += 20;
-		break;
-	case GLUT_KEY_UP:
-		obsY += 20;
-		break;
-	case GLUT_KEY_DOWN:
-		obsY -= 20;
-		break;
-	}
-}
+GLfloat winWidth = 800, winHeight = 600;							 //	 Dimensiunile ferestrei de afisare;
+float xMin = -400, xMax = 400.f, yMin = -300.f, yMax = 300.f;		 //	 Variabile pentru proiectia ortogonala;
+int drawCode;
 
 //	Functia de incarcare a texturilor in program;
 void LoadTexture(const char* photoPath)
@@ -112,13 +48,12 @@ void LoadTexture(const char* photoPath)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-//  Crearea si compilarea obiectelor de tip shader;
-//	Trebuie sa fie in acelasi director cu proiectul actual;
+
 //  Shaderul de varfuri / Vertex shader - afecteaza geometria scenei;
 //  Shaderul de fragment / Fragment shader - afecteaza culoarea pixelilor;
 void CreateShaders(void)
 {
-	ProgramId = LoadShaders("04_03_Shader.vert", "04_03_Shader.frag");
+	ProgramId = LoadShaders("04_05_Shader.vert", "04_05_Shader.frag");
 	glUseProgram(ProgramId);
 }
 
@@ -126,24 +61,25 @@ void CreateShaders(void)
 //  In acesta se stocheaza date despre varfuri (coordonate, culori, indici, texturare etc.);
 void CreateVBO(void)
 {
-
-	//	Atributele varfurilor -  COORDONATE, CULORI, COORDONATE DE TEXTURARE;
-	GLfloat Vertices[] = {
-	//	Coordonate;					Culori;				Coordonate de texturare;
-	  -50.0f, -50.0f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	0.0f, 0.0f,	// Stanga jos;
-	   50.0f, -50.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,	1.0f, 0.0f, // Dreapta jos;
-	   50.0f,  50.0f, 0.0f, 1.0f,   1.0f, 1.0f, 0.0f,	1.0f, 1.0f,	// Dreapta sus;
-	  -50.0f,  50.0f, 0.0f, 1.0f,   0.0f, 1.0f, 1.0f,	0.0f, 1.0f  // Stanga sus;
+	//  Coordonatele varfurilor;
+	static const GLfloat Vertices[] =
+	{
+		// Coordonatele varfurilor     | Culorile varfurilor  |  Coordonatele de texturare
+		-75.0f, -75.0f,  0.0f,  1.0f,     1.0f, 0.0f, 0.0f,       0.0f, 0.0f,
+		 75.0f, -75.0f,  0.0f,  1.0f,	  1.0f, 0.5f, 0.3f,	      1.0f, 0.0f,
+		 75.0f,  75.0f,  0.0f,  1.0f,	  1.0f, 0.7f, 0.0f,       1.0f, 1.0f,
+		-75.0f,  75.0f,  0.0f,  1.0f,     1.0f, 1.0f, 0.0f,       0.0f, 1.0f
 	};
 
 	//	Indicii care determina ordinea de parcurgere a varfurilor;
-	GLuint Indices[] = {
-	  0, 1, 2,  //	Primul triunghi;
-	  0, 2, 3	//  Al doilea triunghi;
+	static const GLuint Indices[] =
+	{
+		0, 1, 2, 3
 	};
 
+
 	//  Transmiterea datelor prin buffere;
-	
+
 	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
 	glGenVertexArrays(1, &VaoId);                                                   //  Generarea VAO si indexarea acestuia catre variabila VaoId;
 	glBindVertexArray(VaoId);
@@ -152,7 +88,7 @@ void CreateVBO(void)
 	glGenBuffers(1, &VboId);													//  Generarea bufferului si indexarea acestuia catre variabila VboId;
 	glBindBuffer(GL_ARRAY_BUFFER, VboId);										//  Setarea tipului de buffer - atributele varfurilor;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
+	
 	//	Se creeaza un buffer pentru INDICI;
 	glGenBuffers(1, &EboId);														//  Generarea bufferului si indexarea acestuia catre variabila EboId;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EboId);									//  Setarea tipului de buffer - atributele varfurilor;
@@ -184,7 +120,7 @@ void DestroyVBO(void)
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 
-	//  Stergerea bufferelor pentru VARFURI (Coordonate, Culori, Textura), INDICI;
+	//  Stergerea bufferelor pentru VARFURI(Coordonate, Culori, Textura), INDICI;
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &VboId);
 	glDeleteBuffers(1, &EboId);
@@ -206,71 +142,72 @@ void Initialize(void)
 {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		//  Culoarea de fond a ecranului;
 	CreateShaders();							//  Initilizarea shaderelor;
+	
 	//	Instantierea variabilelor uniforme pentru a "comunica" cu shaderele;
+	drawCodeLocation = glGetUniformLocation(ProgramId, "drawCode");
 	myMatrixLocation = glGetUniformLocation(ProgramId, "myMatrix");
-	viewLocation = glGetUniformLocation(ProgramId, "view");
-	projLocation = glGetUniformLocation(ProgramId, "projection");
-	//	Pentru shaderul de fragmente;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+
+	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
+
+	scaleMatrix = glm::scale(glm::vec3(2.0f, 0.5f, 1.0f));			     // matrice pentru scalare cu factori (2.0, 0.5)
+	translationMatrix = glm::translate(glm::vec3(100.0f, 100.0f, 0.0f)); // matrice pentru translatie de vector (100, 100)
 }
 
 //  Functia de desenarea a graficii pe ecran;
 void RenderFunction(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);			//  Se curata ecranul OpenGL pentru a fi desenat noul continut;
+	glClear(GL_COLOR_BUFFER_BIT); //  Se curata ecranul OpenGL pentru a fi desenat noul continut;
 
-	//	Matrici pentru transformari;
-	matrRot = glm::rotate(glm::mat4(1.0f), PI / 8, glm::vec3(0.0, 0.0, 1.0));
-	
-	//	Realizarea perspectivei;
-	//	Pozitia observatorului;
-	glm::vec3 obs = glm::vec3(obsX, obsY, obsZ);
-	//	Pozitia punctului de referinta;
-	refX = obsX; refY = obsY;
-	glm::vec3 refPoint = glm::vec3(refX, refY, -1.0f);
-	//	Verticala din planul de vizualizare; 
-	glm::vec3 vert = glm::vec3(vX, 1.0f, 0.0f);
-	view = glm::lookAt(obs, refPoint, vert);
+	CreateVBO();
 
-	//	Realizarea proiectiei;
-	projection = glm::perspective(fov, GLfloat(width) / GLfloat(height), zNear, zFar);
-	myMatrix = glm::mat4(1.0f);
-	//	myMatrix = matrRot;
-	//  Trecerea datelor de randare spre bufferul folosit de shadere;
-	CreateVBO();								
 	//	Incarcarea texturii si legarea acesteia cu shaderul;
-	LoadTexture("text_smiley_face.png");		
+	LoadTexture("wallpaper.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	//	Transmiterea variabilelor uniforme pentru MATRICEA DE TRANSFORMARE, PERSPECTIVA si PROIECTIE spre shadere;
-	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
-	glUniformMatrix4fv(projLocation, 1, GL_FALSE, &projection[0][0]);
-	//	Transmiterea variabilei uniforme pentru TEXTURARE spre shaderul de fragmente;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	glutSwapBuffers();	//	Inlocuieste imaginea desenata in fereastra cu cea randata; 
-	glFlush();			//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
+	// Patratul initial
+	myMatrix = resizeMatrix;
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+	drawCode = 0;
+	glUniform1i(drawCodeLocation, drawCode);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
+
+	// Patratul dupa ce se aplica mai intai scalarea, apoi translatia
+	myMatrix = resizeMatrix  * translationMatrix * scaleMatrix;
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+	drawCode = 1;
+	glUniform1i(drawCodeLocation, drawCode);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
+
+	// Patratul dupa ce se aplica mai intai translatia, apoi scalarea
+	myMatrix = resizeMatrix * scaleMatrix * translationMatrix;
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+	drawCode = 2;
+	glUniform1i(drawCodeLocation, drawCode);
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
+
+
+	glutSwapBuffers();						//  Inlocuieste imaginea desenata in fereastra cu cea randata
+	glFlush();								//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
 }
 
-//	Punctul de intrare in program, se ruleaza rutina OpenGL;
+
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);					//	Se folosesc 2 buffere (unul pentru afisare si unul pentru randare => animatii cursive) si culori RGB;
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);					//	Modul de afisare al ferestrei, se foloseste un singur buffer de afisare si culori RGB;
 	glutInitWindowSize(winWidth, winHeight);						//  Dimensiunea ferestrei;
 	glutInitWindowPosition(100, 100);								//  Pozitia initiala a ferestrei;
-	glutCreateWindow("Utilizarea texturarii - OpenGL <<nou>>");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
+	glutCreateWindow("Cerinta 2");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
 
 	glewInit();
-	Initialize();							//  Setarea parametrilor necesari pentru fereastra de vizualizare; 
-	glutDisplayFunc(RenderFunction);		//  Desenarea scenei in fereastra;
-	glutIdleFunc(RenderFunction);			//	Asigura rularea continua a randarii;
-	glutKeyboardFunc(ProcessNormalKeys);	//	Functii ce proceseaza inputul de la tastatura utilizatorului;
-	glutSpecialFunc(ProcessSpecialKeys);
-	glutCloseFunc(Cleanup);					//  Eliberarea resurselor alocate de program;
+
+	Initialize();						//  Setarea parametrilor necesari pentru fereastra de vizualizare; 
+	glutDisplayFunc(RenderFunction);	//  Desenarea scenei in fereastra;
+	glutCloseFunc(Cleanup);				//  Eliberarea resurselor alocate de program;
 
 	glutMainLoop();
 	return 0;
