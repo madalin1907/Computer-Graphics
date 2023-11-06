@@ -27,7 +27,7 @@ const float xMin = -400, xMax = 400.f, yMin = -300.f, yMax = 300.f; //	Variabile
 
 glm::mat4 myMatrix, resizeMatrix; //	Variabile catre matricile de transformare;
 const float PI = 3.1415926;
-const GLuint n = 20, r1 = 100, r2 = 220; //	Numarul de varfuri, raza cercului mic, raza cercului mare;
+const GLuint n = 35, r1 = 100, r2 = 220; //	Numarul de varfuri, raza cercului mic, raza cercului mare;
 
 //  Crearea si compilarea obiectelor de tip shader;
 //  Shaderul de varfuri / Vertex shader - afecteaza geometria scenei;

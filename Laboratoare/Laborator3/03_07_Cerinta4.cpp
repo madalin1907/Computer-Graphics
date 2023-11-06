@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);					//	Modul de afisare al ferestrei, se foloseste un singur buffer de afisare si culori RGB;
 	glutInitWindowSize(winWidth, winHeight);						//  Dimensiunea ferestrei;
 	glutInitWindowPosition(1000, 300);								//  Pozitia initiala a ferestrei;
-	glutCreateWindow("Cerintele 1-3");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
+	glutCreateWindow("Cerinta 4");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
 
 	glewInit();
 

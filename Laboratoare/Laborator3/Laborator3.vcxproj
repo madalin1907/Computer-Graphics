@@ -169,7 +169,7 @@ xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="03_06_Cerintele1-3.cpp" />
+    <ClCompile Include="03_07_Cerinta4.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\imageloader.cpp" />

@@ -102,7 +102,7 @@
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Header Files\template-built-ins\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="03_06_Cerintele1-3.cpp">
+    <ClCompile Include="03_07_Cerinta4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
