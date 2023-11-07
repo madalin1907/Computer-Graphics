@@ -4,9 +4,7 @@
 //            PROIECT 1 - Joc de Biliard          |
 // ================================================
 
-// Biblioteci
-#include <chrono>						 // Biblioteci utilizate pentru adaugarea de deelay-uri in program;
-#include <thread>						 
+// Biblioteci					 
 #include <string>						 //	 Biblioteca pentru lucrul cu siruri de caractere;
 #include <windows.h>					 //	 Utilizarea functiilor de sistem Windows (crearea de ferestre, manipularea fisierelor si directoarelor);
 #include <stdlib.h>						 //  Biblioteci necesare pentru citirea shaderelor;
@@ -23,9 +21,9 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-// Variabile folosite pentru desenarea bilelor
-const int ballsNumber = 10; 						 //  Numarul de bile
-const GLuint circleVertices = 25;					 //	 Numarul de varfuri ce compun poligoanele;
+
+const int ballsNumber = 10; 						 //  Numarul de bile;
+const GLuint circleVertices = 25;					 //	 Numarul de varfuri ce compun poligoanele ce reprezinta bilele;
 const float PI = 3.14159265359;						 //	 Valoarea lui PI;
 const int radius = 20;								 //	 Raza bilelor;
 GLfloat ballsPositions[circleVertices][2];			 //	 Vector pentru pozitiile initiale ale bilelor
@@ -33,18 +31,54 @@ GLfloat ballsPositions[circleVertices][2];			 //	 Vector pentru pozitiile initia
 const GLfloat winWidth = 1280, winHeight = 730;										 //	 Dimensiunile ferestrei de afisare;
 const float xMin = -640, xMax = 640.f, yMin = -365.0f, yMax = 365.0f;				 //	 Variabile pentru proiectia ortogonala;
 
-std::chrono::steady_clock::time_point startTime;									 //  Variabila pentru calcularea timpului de rulare a programului;
+GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, textures[11];				 //  Identificatorii obiectelor de tip OpenGL;
+glm::mat4 myMatrix, resizeMatrix, translationMatrices[10];							 //	 Variabile catre matricile de transformare;
+float translationStep = 2, test = 0.0;												 //  Variabile pentru translatii
 
-GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, texture, drawCodeLocation;  //  Identificatorii obiectelor de tip OpenGL;
-glm::mat4 myMatrix, resizeMatrix;													 //	 Variabile catre matricile de transformare;
-int drawCode;																		 //	 Variabila pentru desenarea bilelor
+
+void Turn2(void) {
+	test = test - translationStep;
+	glutPostRedisplay();
+
+	if (test <= -255.0)
+		glutIdleFunc(NULL);
+}
+
+void Turn1(void) {
+	test = test + translationStep;
+	glutPostRedisplay();
+
+	if (test >= 455.0)
+		glutIdleFunc(Turn2);
+}
+
+
+
+int clickCounter = 0;
+void UseMouse(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		++clickCounter;
+
+		switch (clickCounter) {
+		case 1:
+			glutIdleFunc(Turn1);
+			break;
+		case 2:
+			glutIdleFunc(NULL);
+			break;
+		case 3:
+			glutIdleFunc(NULL);
+			break;
+		}
+	}
+}
 
 
 //	Functia de incarcare a texturilor in program;
-void LoadTexture(const char* photoPath)
+void LoadTexture(const char* photoPath, int index)
 {
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &textures[index]);
+	glBindTexture(GL_TEXTURE_2D, textures[index]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -74,13 +108,13 @@ void CreateShaders(void)
 //  In acesta se stocheaza date despre varfuri (coordonate, culori, indici, texturare etc.);
 void CreateVBO(void)
 {
-	GLfloat Vertices[(ballsNumber * circleVertices + 4) * 9];		// ballsNumber * circleVertices varfuri pentru bile + 4 varfuri pentru masa de biliard
-																	// fiecare varf avand 9 valori: 4 pentru pozitie, 3 pentru culoare, 2 pentru texturare
+	GLfloat Vertices[(ballsNumber * circleVertices + 4) * 9];		//  ballsNumber * circleVertices varfuri pentru bile + 4 varfuri pentru masa de biliard
+																	//  fiecare varf avand 9 valori: 4 pentru pozitie, 3 pentru culoare, 2 pentru texturare
 										
 
 	// MASA DE BILIARD
 
-	// Se adauga manual coordonatele varfurilor mesei de biliard
+	//  Se adauga manual coordonatele varfurilor mesei de biliard
 	//    coordonata x    |     coordonata y      |         coordonate de texturare
 	Vertices[0]  = -640.0f; Vertices[1]  = -365.0f; Vertices[7]  = 0.0f; Vertices[8]  = 0.0f;
 	Vertices[9]  =  640.0f; Vertices[10] = -365.0f; Vertices[16] = 1.0f; Vertices[17] = 0.0f;
@@ -90,7 +124,7 @@ void CreateVBO(void)
 	
 	// BILELE DE BILIARD
 	
-	// Vectorul cu pozitiile initiale ale bilelor
+	//  Vectorul cu pozitiile initiale ale bilelor
 	//       coordonata x         |        coordonata y
 	ballsPositions[0][0] = -282.0f; ballsPositions[0][1] =    0.0f;
 	ballsPositions[1][0] =  215.0f; ballsPositions[1][1] =    0.0f;
@@ -104,7 +138,7 @@ void CreateVBO(void)
 	ballsPositions[9][0] =  285.0f; ballsPositions[9][1] =    0.0f;
 
 
-	// Se creeaza coordonatele bilelor de biliard
+	//  Se creeaza coordonatele bilelor de biliard
 	for (int i = 0; i < ballsNumber; ++i) {
 		for (int j = 0; j < circleVertices; ++j) {
 			float angle = 2 * PI * j / circleVertices;
@@ -117,7 +151,7 @@ void CreateVBO(void)
 	}
 
 
-	// Se modifica aceste coordonate pentru toate varfurile din scena, fiind identice
+	//  Se modifica aceste coordonate pentru toate varfurile din scena, fiind identice
 	for (int i = 0; i < ballsNumber * circleVertices + 4; i++) {
 		Vertices[i * 9 + 2] = 0.0f;							 		 // coordonata z
 		Vertices[i * 9 + 3] = 1.0f;								     // coordonata w
@@ -198,15 +232,25 @@ void Cleanup(void)
 //  Setarea parametrilor necesari pentru fereastra de vizualizare;
 void Initialize(void)
 {
-	startTime = std::chrono::steady_clock::now();
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		//  Culoarea de fond a ecranului;
 	CreateShaders();							//  Initilizarea shaderelor;
 	
 	//	Instantierea variabilelor uniforme pentru a "comunica" cu shaderele;
 	myMatrixLocation = glGetUniformLocation(ProgramId, "myMatrix");
-	drawCodeLocation = glGetUniformLocation(ProgramId, "drawCode");
 
 	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
+
+
+	// Incarcarea texturilor in program o singura data pentru a nu umple memoria RAM si pentru o performanta mai buna a programului
+
+	//  Incarcarea texturii pentru fiecare bila
+	for (int i = 0; i < ballsNumber; ++i) {
+		std::string textureFileName = "./textures/" + std::to_string(i) + "ball.png";
+		LoadTexture(textureFileName.c_str(), i);
+	}
+
+	//  Incarcarea texturii pentru masa de biliard
+	LoadTexture("./textures/Table.png", 10);
 }
 
 
@@ -214,41 +258,39 @@ void Initialize(void)
 void RenderFunction(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	// Calculate the time elapsed in seconds
-	auto currentTime = std::chrono::steady_clock::now();
-	double elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-
 	CreateVBO();
 
-	// Load and bind the texture as before
-	LoadTexture("./textures/Table.png");
+	//  Desenarea mesei de biliard
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, textures[10]);
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
-
-	// Only draw the polygon if 3 seconds have elapsed
-	/*if (elapsedTime >= 3.0) {
-		myMatrix = resizeMatrix;
-		glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-		glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
-	}*/
 
 	myMatrix = resizeMatrix;
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-	drawCode = 1;
-	glUniform1i(drawCodeLocation, drawCode);
-
 	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
 
-	for (int i = 0; i < ballsNumber; ++i) {
-		std::string textureFileName = "./textures/" + std::to_string(i) + "ball.png";
 
-		LoadTexture(textureFileName.c_str());
+	translationMatrices[0] = glm::translate(glm::mat4(1.0f), glm::vec3(test, 0.0, 0.0));
+	translationMatrices[1] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[2] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[3] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[4] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[5] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[6] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[7] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[8] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[9] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+
+
+	//  Desenarea bilelor de biliard
+	for (int i = 0; i < ballsNumber; ++i) {
+		// Se activeaza textura si se trimite la shader;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, textures[i]);
 		glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 
+		myMatrix = resizeMatrix * translationMatrices[i];
+		glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 		glDrawArrays(GL_POLYGON, 4 + i * circleVertices, circleVertices);
 	}
 
@@ -269,7 +311,7 @@ int main(int argc, char* argv[])
 
 	Initialize();			
 	glutDisplayFunc(RenderFunction);						//  Desenarea scenei in fereastra;
-	glutIdleFunc(RenderFunction);							//	Asigura rularea continua a randarii;
+	glutMouseFunc(UseMouse);								//	Activarea utilizarii mouseului;
 	glutCloseFunc(Cleanup);								    //  Eliberarea resurselor alocate de program;
 	
 	glutMainLoop();

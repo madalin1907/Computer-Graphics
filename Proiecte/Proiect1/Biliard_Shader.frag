@@ -21,13 +21,5 @@ uniform int drawCode;
 
 void main(void)
 {
-	switch (drawCode)
-	{
-	case 0:
-		out_Color = ex_Color;
-		break;
-	case 1:
-		out_Color = texture(myTexture, tex_Coord);
-		break;
-	}
+	out_Color = texture(myTexture, tex_Coord);
 }
