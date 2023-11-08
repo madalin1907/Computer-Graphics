@@ -26,30 +26,164 @@ const int ballsNumber = 10; 						 //  Numarul de bile;
 const GLuint circleVertices = 25;					 //	 Numarul de varfuri ce compun poligoanele ce reprezinta bilele;
 const float PI = 3.14159265359;						 //	 Valoarea lui PI;
 const int radius = 20;								 //	 Raza bilelor;
-GLfloat ballsPositions[circleVertices][2];			 //	 Vector pentru pozitiile initiale ale bilelor
+GLfloat ballsPositions[10][2];						 //	 Vector pentru pozitiile initiale ale bilelor
+bool pottedBalls[10];								 //	 Vector pentru bilele cazute in buzunar
 
 const GLfloat winWidth = 1280, winHeight = 730;										 //	 Dimensiunile ferestrei de afisare;
 const float xMin = -640, xMax = 640.f, yMin = -365.0f, yMax = 365.0f;				 //	 Variabile pentru proiectia ortogonala;
 
 GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, textures[11];				 //  Identificatorii obiectelor de tip OpenGL;
 glm::mat4 myMatrix, resizeMatrix, translationMatrices[10];							 //	 Variabile catre matricile de transformare;
-float translationStep = 2, test = 0.0;												 //  Variabile pentru translatii
 
+float distances[10][2];																 //  Matricea distantelor parcurse prin translatii
+	
 
 void Turn2(void) {
-	test = test - translationStep;
-	glutPostRedisplay();
-
-	if (test <= -255.0)
-		glutIdleFunc(NULL);
 }
 
-void Turn1(void) {
-	test = test + translationStep;
-	glutPostRedisplay();
 
-	if (test >= 455.0)
-		glutIdleFunc(Turn2);
+bool turn1_ball0_hit = false, turn1_ball4_hit = false;
+bool turn1_ball0_destination = false, turn1_ball1_destination = false, turn1_ball2_destination = false, turn1_ball3_destination = false, turn1_ball4_destination = false;
+bool turn1_ball5_destination = false, turn1_ball6_destination = false, turn1_ball7_destination = false, turn1_ball8_destination = false, turn1_ball9_destination = false;
+
+void Turn1(void) {
+	// testam daca bila alba a lovit bila galbena
+	if (distances[0][0] >= ballsPositions[1][0] - ballsPositions[0][0] - 2 * radius)
+		turn1_ball0_hit = true;
+
+	// daca bila alba nu a lovit bila galbena, continuam sa o miscam
+	if (!turn1_ball0_hit)
+		distances[0][0] += 1.0;
+	// daca bila alba a atins bila galbena, mutam toate bilele
+	else {
+		// mutam bila alba in partea stanga a mesei
+		if (distances[0][0] >= -105.0)
+			distances[0][0] -= 0.5;
+		else {
+			ballsPositions[0][0] -= 105.0;
+			turn1_ball0_destination = true;
+		}
+
+		// mutam bila galbena putin mai jos si mai la stanga
+		if (distances[1][0] >= -350.0)
+		{ 
+			distances[1][0] -= 0.3;
+			distances[1][1] -= 0.15;
+		}
+		else {
+			ballsPositions[1][0] -= 350.0;
+			ballsPositions[1][1] -= 350.0 / 2;
+			turn1_ball1_destination = true;
+		}
+
+		
+		// mutam bila albastra putin mai jos si mai la stanga
+		if (distances[2][0] >= -75.0)
+		{
+			distances[2][0] -= 0.05;
+			distances[2][1] -= 0.15;
+		}
+		else {
+			ballsPositions[2][0] -= 75.0;
+			ballsPositions[2][1] -= 75.0 * 3;
+			turn1_ball2_destination = true;
+		}
+
+
+		// mutam bila rosie pe centrul mesei, mai sus
+		if (distances[3][0] >= -235.0)
+		{
+			distances[3][0] -= 0.15;
+			distances[3][1] += 0.1;
+		}
+		else {
+			ballsPositions[3][0] -= 235.0;
+			ballsPositions[3][1] += 235.0 * 2 / 3;
+			turn1_ball3_destination = true;
+		}
+
+
+		// mutam bila mov mai jos (cu lovitura de manta)
+		if (distances[4][1] <= -223.0) // testam daca bila mov a lovit manta
+			turn1_ball4_hit = true;
+
+		if (!turn1_ball4_hit)
+			distances[4][1] -= 0.2;
+		else
+		{
+			if (distances[4][1] <= -75.0)
+				distances[4][1] += 0.1;
+			else
+			{
+				ballsPositions[4][1] -= 75.0;
+				turn1_ball4_destination = true;
+			}
+		}
+
+
+		// mutam bila portocalie aproape de buzunarul din dreapta sus
+		if (distances[5][0] <= 175.0) {
+			distances[5][0] += 0.1;
+			distances[5][1] += 0.1;
+		}
+		else {
+			ballsPositions[5][0] += 175.0;
+			ballsPositions[5][1] += 175.0;
+			turn1_ball5_destination = true;
+		}
+
+
+		// mutam bila verde in buzunarul din stanga jos
+		if (distances[6][0] <= 250.0)
+		{
+			distances[6][0] += 0.2;
+			distances[6][1] -= 0.2;
+		}
+		else {
+			turn1_ball6_destination = true;
+			pottedBalls[6] = true;
+		}
+
+
+		// mutam bila maro in buzunarul din dreapta sus
+		if (distances[7][0] <= 250.0)
+		{
+			distances[7][0] += 0.3;
+			distances[7][1] += 0.3;
+		}
+		else {
+			turn1_ball7_destination = true;
+			pottedBalls[7] = true;
+		}
+
+
+		// mutam bila neagra putin la dreapta
+		if (distances[8][0] <= 105.0)
+			distances[8][0] += 0.1;
+		else {
+			ballsPositions[8][0] += 105.0;
+			turn1_ball8_destination = true;
+		}
+
+
+		// mutam bila cu numarul 9 foarte putin mai jos si mai la dreapta
+		if (distances[9][0] <= 50.0)
+		{
+			distances[9][0] += 0.05;
+			distances[9][1] -= 0.05;
+		}
+		else {
+			ballsPositions[9][0] += 50.0;
+			ballsPositions[9][1] -= 50.0;
+			turn1_ball9_destination = true;
+		}
+	}
+
+	if (turn1_ball0_destination && turn1_ball1_destination && turn1_ball2_destination && turn1_ball3_destination && turn1_ball4_destination && turn1_ball5_destination && turn1_ball6_destination && turn1_ball7_destination && turn1_ball8_destination) {
+		glutIdleFunc(NULL);
+	}
+
+	glutPostRedisplay();
 }
 
 
@@ -64,7 +198,7 @@ void UseMouse(int button, int state, int x, int y) {
 			glutIdleFunc(Turn1);
 			break;
 		case 2:
-			glutIdleFunc(NULL);
+			glutIdleFunc(Turn2);
 			break;
 		case 3:
 			glutIdleFunc(NULL);
@@ -124,7 +258,7 @@ void CreateVBO(void)
 	
 	// BILELE DE BILIARD
 	
-	//  Vectorul cu pozitiile initiale ale bilelor
+	//  Vectorul cu pozitiile bilelor
 	//       coordonata x         |        coordonata y
 	ballsPositions[0][0] = -282.0f; ballsPositions[0][1] =    0.0f;
 	ballsPositions[1][0] =  215.0f; ballsPositions[1][1] =    0.0f;
@@ -241,7 +375,8 @@ void Initialize(void)
 	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
 
 
-	// Incarcarea texturilor in program o singura data pentru a nu umple memoria RAM si pentru o performanta mai buna a programului
+	// Incarcarea texturilor in program o singura data pentru a nu umple memoria RAM 
+	// si, implicit, pentru o performanta mai buna a programului
 
 	//  Incarcarea texturii pentru fiecare bila
 	for (int i = 0; i < ballsNumber; ++i) {
@@ -270,28 +405,31 @@ void RenderFunction(void)
 	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(0));
 
 
-	translationMatrices[0] = glm::translate(glm::mat4(1.0f), glm::vec3(test, 0.0, 0.0));
-	translationMatrices[1] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[2] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[3] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[4] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[5] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[6] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[7] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[8] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
-	translationMatrices[9] = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+	translationMatrices[0] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[0][0], distances[0][1], 0.0));
+	translationMatrices[1] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[1][0], distances[1][1], 0.0));
+	translationMatrices[2] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[2][0], distances[2][1], 0.0));
+	translationMatrices[3] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[3][0], distances[3][1], 0.0));
+	translationMatrices[4] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[4][0], distances[4][1], 0.0));
+	translationMatrices[5] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[5][0], distances[5][1], 0.0));
+	translationMatrices[6] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[6][0], distances[6][1], 0.0));
+	translationMatrices[7] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[7][0], distances[7][1], 0.0));
+	translationMatrices[8] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[8][0], distances[8][1], 0.0));
+	translationMatrices[9] = glm::translate(glm::mat4(1.0f), glm::vec3(distances[9][0], distances[9][1], 0.0));
 
 
 	//  Desenarea bilelor de biliard
 	for (int i = 0; i < ballsNumber; ++i) {
-		// Se activeaza textura si se trimite la shader;
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[i]);
-		glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+		if (!pottedBalls[i])
+		{
+			// Se activeaza textura si se trimite la shader;
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+			glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 
-		myMatrix = resizeMatrix * translationMatrices[i];
-		glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-		glDrawArrays(GL_POLYGON, 4 + i * circleVertices, circleVertices);
+			myMatrix = resizeMatrix * translationMatrices[i];
+			glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+			glDrawArrays(GL_POLYGON, 4 + i * circleVertices, circleVertices);
+		}
 	}
 
 	glutSwapBuffers();
