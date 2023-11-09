@@ -4,7 +4,7 @@
 //            PROIECT 1 - Joc de Biliard          |
 // ================================================
 
-// Biblioteci					 
+// Biblioteci
 #include <string>						 //	 Biblioteca pentru lucrul cu siruri de caractere;
 #include <windows.h>					 //	 Utilizarea functiilor de sistem Windows (crearea de ferestre, manipularea fisierelor si directoarelor);
 #include <stdlib.h>						 //  Biblioteci necesare pentru citirea shaderelor;
@@ -35,105 +35,89 @@ const float xMin = -640, xMax = 640.f, yMin = -365.0f, yMax = 365.0f;				 //	 Va
 GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, textures[11];				 //  Identificatorii obiectelor de tip OpenGL;
 glm::mat4 myMatrix, resizeMatrix, translationMatrices[10];							 //	 Variabile catre matricile de transformare;
 
-float distances[10][2];																 //  Matricea distantelor parcurse prin translatii
+GLfloat distances[10][2];															 //  Matricea distantelor parcurse prin translatii
 	
 
-void Turn2(void) {
-}
-
-
-bool turn1_ball0_hit = false, turn1_ball4_hit = false;
-bool turn1_ball0_destination = false, turn1_ball1_destination = false, turn1_ball2_destination = false, turn1_ball3_destination = false, turn1_ball4_destination = false;
-bool turn1_ball5_destination = false, turn1_ball6_destination = false, turn1_ball7_destination = false, turn1_ball8_destination = false, turn1_ball9_destination = false;
+//  Variabile pentru testele din Turn-ul 1
+// 
+//  Variabile pentru testarea coliziunilor
+bool turn1_ball0_hit, turn1_ball4_hit;
+//  Variabile pentru testarea faptului ca bilele au ajuns in locul unde ne-am propus sa le mutam
+bool turn1_ball0_destination, turn1_ball1_destination, turn1_ball2_destination, turn1_ball3_destination, turn1_ball4_destination;
+bool turn1_ball5_destination, turn1_ball6_destination, turn1_ball7_destination, turn1_ball8_destination, turn1_ball9_destination;
 
 void Turn1(void) {
-	// testam daca bila alba a lovit bila galbena
+	//  Testam daca bila alba a lovit bila galbena
 	if (distances[0][0] >= ballsPositions[1][0] - ballsPositions[0][0] - 2 * radius)
 		turn1_ball0_hit = true;
 
-	// daca bila alba nu a lovit bila galbena, continuam sa o miscam
+	//  Daca bila alba nu a lovit bila galbena, continuam sa o miscam
 	if (!turn1_ball0_hit)
 		distances[0][0] += 1.0;
-	// daca bila alba a atins bila galbena, mutam toate bilele
+	//  Daca bila alba a atins bila galbena, mutam toate bilele in locuri diferite pe masa
 	else {
-		// mutam bila alba in partea stanga a mesei
-		if (distances[0][0] >= -105.0)
+		//  Mutam bila alba in partea stanga a mesei
+		if (distances[0][0] >= -105.0) // distanta fata de pozitia initiala a bilei albe
 			distances[0][0] -= 0.5;
-		else {
-			ballsPositions[0][0] -= 105.0;
+		else
 			turn1_ball0_destination = true;
-		}
+		
 
-		// mutam bila galbena putin mai jos si mai la stanga
+		//  Mutam bila galbena putin mai jos si mai la stanga
 		if (distances[1][0] >= -350.0)
-		{ 
+		{
 			distances[1][0] -= 0.3;
 			distances[1][1] -= 0.15;
 		}
-		else {
-			ballsPositions[1][0] -= 350.0;
-			ballsPositions[1][1] -= 350.0 / 2;
+		else
 			turn1_ball1_destination = true;
-		}
 
-		
-		// mutam bila albastra putin mai jos si mai la stanga
+
+		//  Mutam bila albastra putin mai jos si mai la stanga
 		if (distances[2][0] >= -75.0)
 		{
 			distances[2][0] -= 0.05;
 			distances[2][1] -= 0.15;
 		}
-		else {
-			ballsPositions[2][0] -= 75.0;
-			ballsPositions[2][1] -= 75.0 * 3;
+		else
 			turn1_ball2_destination = true;
-		}
 
 
-		// mutam bila rosie pe centrul mesei, mai sus
+		//  Mutam bila rosie pe centrul mesei, mai sus
 		if (distances[3][0] >= -235.0)
 		{
 			distances[3][0] -= 0.15;
 			distances[3][1] += 0.1;
 		}
-		else {
-			ballsPositions[3][0] -= 235.0;
-			ballsPositions[3][1] += 235.0 * 2 / 3;
+		else
 			turn1_ball3_destination = true;
-		}
 
 
-		// mutam bila mov mai jos (cu lovitura de manta)
-		if (distances[4][1] <= -223.0) // testam daca bila mov a lovit manta
+		//  Mutam bila mov mai jos (cu lovitura de manta)
+		if (distances[4][1] <= -223.0) //  Testam daca bila mov a lovit manta
 			turn1_ball4_hit = true;
 
 		if (!turn1_ball4_hit)
 			distances[4][1] -= 0.2;
 		else
 		{
-			if (distances[4][1] <= -75.0)
+			if (distances[4][1] <= -100.0)
 				distances[4][1] += 0.1;
 			else
-			{
-				ballsPositions[4][1] -= 75.0;
 				turn1_ball4_destination = true;
-			}
 		}
 
 
-		// mutam bila portocalie aproape de buzunarul din dreapta sus
+		//  Mutam bila portocalie aproape de buzunarul din dreapta sus
 		if (distances[5][0] <= 175.0) {
 			distances[5][0] += 0.1;
 			distances[5][1] += 0.1;
 		}
-		else {
-			ballsPositions[5][0] += 175.0;
-			ballsPositions[5][1] += 175.0;
+		else
 			turn1_ball5_destination = true;
-		}
 
 
-		// mutam bila verde in buzunarul din stanga jos
+		//  Mutam bila verde in buzunarul din stanga jos
 		if (distances[6][0] <= 250.0)
 		{
 			distances[6][0] += 0.2;
@@ -145,7 +129,7 @@ void Turn1(void) {
 		}
 
 
-		// mutam bila maro in buzunarul din dreapta sus
+		//  Mutam bila maro in buzunarul din dreapta sus
 		if (distances[7][0] <= 250.0)
 		{
 			distances[7][0] += 0.3;
@@ -157,29 +141,92 @@ void Turn1(void) {
 		}
 
 
-		// mutam bila neagra putin la dreapta
+		//  Mutam bila neagra putin la dreapta
 		if (distances[8][0] <= 105.0)
 			distances[8][0] += 0.1;
-		else {
-			ballsPositions[8][0] += 105.0;
+		else
 			turn1_ball8_destination = true;
-		}
 
 
-		// mutam bila cu numarul 9 foarte putin mai jos si mai la dreapta
+		//  Mutam bila cu numarul 9 foarte putin mai jos si mai la dreapta
 		if (distances[9][0] <= 50.0)
 		{
 			distances[9][0] += 0.05;
 			distances[9][1] -= 0.05;
 		}
-		else {
-			ballsPositions[9][0] += 50.0;
-			ballsPositions[9][1] -= 50.0;
+		else
 			turn1_ball9_destination = true;
+	}
+
+	if (turn1_ball0_destination && turn1_ball1_destination && turn1_ball2_destination && turn1_ball3_destination && turn1_ball4_destination && turn1_ball5_destination && turn1_ball6_destination && turn1_ball7_destination && turn1_ball8_destination)
+	{
+		//  Actualizam pozitia fiecarei bile
+		for (int i = 0; i < ballsNumber; ++i)
+			for (int j = 0; j < 2; ++j)
+				ballsPositions[i][j] += distances[i][j];
+
+		//  Resetam vectorul pentru distantele de translatie
+		for (int i = 0; i < ballsNumber; ++i)
+			for (int j = 0; j < 2; ++j)
+				distances[i][j] = 0.0;
+
+		//  Oprim animatia pana la urmatorul click
+		glutIdleFunc(NULL);
+	}
+	glutPostRedisplay();
+}
+
+
+//	Variabile pentru testele din Turn-ul 2
+//
+//  Variabile pentru testarea coliziunilor
+bool turn2_ball0_hit;
+//  Variabile pentru testarea faptului ca bilele au ajuns in locul unde ne-am propus sa le mutam
+bool turn2_ball0_destination, turn2_ball1_destination;
+
+void Turn2(void) {
+	//  Testam daca bila alba a lovit bila galbena
+	
+	if (distances[0][0] >= ballsPositions[1][0] - ballsPositions[0][0] - 2 * radius + 10.0)
+		turn2_ball0_hit = true;
+
+	//  Daca bila alba nu a lovit bila galbena, continuam sa o miscam
+	if (!turn2_ball0_hit) {
+		distances[0][0] += 0.3;
+		distances[0][1] -= 0.2;
+	}
+	//  Daca bila alba a atins bila galbena, mutam bilele corespunzatoare
+	else {
+		//  Mutam bila alba putin mai sus si mai la dreapta
+		if (distances[0][0] <= 340.0)
+		{
+			distances[0][0] += 0.07;
+			distances[0][1] -= 0.01;
+		}
+		else
+			turn2_ball0_destination = true;
+
+		//  Mutam bile galbena in buzunarul de jos din mijloc
+		if (distances[1][0] <= 145.0)
+		{
+			distances[1][0] += 0.1;
+			distances[1][1] -= 0.085;
+		}
+		else {
+			turn1_ball1_destination = true;
+			pottedBalls[1] = true;
 		}
 	}
 
-	if (turn1_ball0_destination && turn1_ball1_destination && turn1_ball2_destination && turn1_ball3_destination && turn1_ball4_destination && turn1_ball5_destination && turn1_ball6_destination && turn1_ball7_destination && turn1_ball8_destination) {
+	if (turn2_ball0_destination && turn1_ball1_destination) {
+		//  Actualizam pozitia bilei albe
+		ballsPositions[0][0] += distances[0][0];
+		ballsPositions[0][1] += distances[0][1];
+
+		//  Resetam distantele de translatie ale bilei albe
+		distances[0][0] = 0.0;
+		distances[0][1] = 0.0;
+
 		glutIdleFunc(NULL);
 	}
 
@@ -187,8 +234,154 @@ void Turn1(void) {
 }
 
 
+//	Variabile pentru testele din Turn-ul 3
+//
+//  Variabile pentru testarea coliziunilor
+bool turn3_ball0_hit1, turn3_ball0_hit2;
+//  Variabile pentru testarea faptului ca bilele au ajuns in locul unde ne-am propus sa le mutam
+bool turn3_ball0_destination, turn3_ball2_destination;
 
-int clickCounter = 0;
+void Turn3(void) {
+	//  Testam daca bila alba a lovit bila albastra
+	if (distances[0][0] >= ballsPositions[2][0] - ballsPositions[0][0] - 2 * radius)
+		turn3_ball0_hit1 = true;
+
+	//  Daca bila alba nu a lovit bila albastra, continuam sa o miscam
+	if (!turn3_ball0_hit1) {
+		distances[0][0] += 0.2;
+		distances[0][1] -= 0.085;
+	}
+	//  Daca bila alba a atins bila albastra, mutam bilele corespunzatoare
+	else {
+		//  Mutam bila alba mai sus, la dreapta (dar dupa ce a lovit manta)
+		if (distances[0][1] <= -98.0)  //  Testam daca bila alba a lovit manta
+			turn3_ball0_hit2 = true;
+
+		if (!turn3_ball0_hit2) {
+			distances[0][0] += 0.03;
+			distances[0][1] -= 0.1;
+		}
+		else
+		{
+			if (distances[0][1] <= -30.0) {
+				distances[0][0] += 0.035;
+				distances[0][1] += 0.07;
+			}
+			else
+				turn3_ball0_destination = true;
+		}
+
+		//  Mutam bila albastra in buzunarul din dreapta jos
+		if (distances[2][0] <= 380.0)
+		{
+			distances[2][0] += 0.2;
+			distances[2][1] -= 0.009;
+		}
+		else {
+			turn3_ball2_destination = true;
+			pottedBalls[2] = true;
+		}
+	}
+
+	if (turn3_ball0_destination && turn3_ball2_destination) {
+		//  Actualizam pozitia bilei albe
+		ballsPositions[0][0] += distances[0][0];
+		ballsPositions[0][1] += distances[0][1];
+
+		//  Resetam distantele de translatie ale bilei albe
+		distances[0][0] = 0.0;
+		distances[0][1] = 0.0;
+
+		glutIdleFunc(NULL);
+	}
+
+	glutPostRedisplay();
+}
+
+
+//	Variabile pentru testele din Turn-ul 4
+//
+//  Variabile pentru testarea coliziunilor
+bool turn4_ball0_hit1, turn4_ball0_hit2, turn4_ball0_hit3;
+//  Variabile pentru testarea faptului ca bilele au ajuns in locul unde ne-am propus sa le mutam
+bool turn4_ball0_destination, turn4_ball3_destination, turn4_ball9_destination;
+
+void Turn4(void) {
+	//  Testam daca bila alba a lovit bila rosie
+	if (distances[0][1] >= ballsPositions[3][1] - ballsPositions[0][1] - 11.0)
+		turn4_ball0_hit1 = true;
+	//  Daca bila alba nu a lovit bila rosie, continuam sa o miscam
+	if (!turn4_ball0_hit1) {
+		distances[0][0] -= 0.17;
+		distances[0][1] += 0.5;
+	}
+	//  Daca bila alba a atins bila rosie, mutam bilele corespunzatoare
+	else
+	{
+		//  Mutam bila rosie in buzunarul din stanga sus
+		if (distances[3][0] >= -565.0)
+		{
+			distances[3][0] -= 0.4;
+			distances[3][1] += 0.06;
+		}
+		else {
+			turn4_ball3_destination = true;
+			pottedBalls[3] = true;
+		}
+
+		//  Lovim bila alba de manta, deplasand-o in dreapta sus
+		if (distances[0][1] >= 457) {
+			turn4_ball0_hit2 = true;
+		}
+		//  Daca bila alba inca nu a lovit manta, continuam sa o miscam
+		if (!turn4_ball0_hit2) {
+			distances[0][0] += 0.3;
+			distances[0][1] += 0.3;
+		}
+		//  Daca bila alba a lovit manta, o deplasam in dreapta jos catre bila galbena (9 ball)
+		else {
+			//  Testam daca bila alba a lovit bila galbena (9 ball)
+			if (distances[0][0] >= ballsPositions[9][0] - ballsPositions[0][0] - 2 * radius + 13.0)
+				turn4_ball0_hit3 = true;
+			//  Daca bila alba nu a lovit bila galbena (9 ball), continuam sa o miscam
+			if (!turn4_ball0_hit3) {
+				distances[0][0] += 0.13;
+				distances[0][1] -= 0.23;
+			}
+			//  Daca bila alba a lovit bila galbena (9 ball), continuam sa miscam bilele corespunzatoare
+			else {
+				//  Mutam bila galbena (9 ball) in buzunarul din dreapta jos
+				if (distances[9][0] <= 230.0)
+				{
+					distances[9][0] += 0.1;
+					distances[9][1] -= 0.1;
+				}
+				else {
+					turn4_ball9_destination = true;
+					pottedBalls[9] = true;
+				}
+
+				//  Mutam bila alba in jos si putin la dreapta
+				if (distances[0][0] <= 150.0) {
+					distances[0][0] += 0.01;
+					distances[0][1] -= 0.05;
+				}
+				else
+					turn4_ball0_destination = true;
+			}
+		}
+	}
+
+	if (turn4_ball0_destination && turn4_ball3_destination && turn4_ball9_destination) {
+		glutIdleFunc(NULL);
+	}
+
+	glutPostRedisplay();
+}
+
+
+int clickCounter = 0; 								   //  Numarul de click-uri pe care le-am dat pe ecran
+//  Functia folosita pentru a declansa fiecare lovire a bilei albe, folosind click-ul stanga al mouse-ului
 void UseMouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		++clickCounter;
@@ -201,7 +394,10 @@ void UseMouse(int button, int state, int x, int y) {
 			glutIdleFunc(Turn2);
 			break;
 		case 3:
-			glutIdleFunc(NULL);
+			glutIdleFunc(Turn3);
+			break;
+		case 4:
+			glutIdleFunc(Turn4);
 			break;
 		}
 	}
@@ -246,7 +442,7 @@ void CreateVBO(void)
 																	//  fiecare varf avand 9 valori: 4 pentru pozitie, 3 pentru culoare, 2 pentru texturare
 										
 
-	// MASA DE BILIARD
+	//  MASA DE BILIARD
 
 	//  Se adauga manual coordonatele varfurilor mesei de biliard
 	//    coordonata x    |     coordonata y      |         coordonate de texturare
@@ -256,21 +452,7 @@ void CreateVBO(void)
 	Vertices[27] = -640.0f; Vertices[28] =  365.0f; Vertices[34] = 0.0f; Vertices[35] = 1.0f;
 
 	
-	// BILELE DE BILIARD
-	
-	//  Vectorul cu pozitiile bilelor
-	//       coordonata x         |        coordonata y
-	ballsPositions[0][0] = -282.0f; ballsPositions[0][1] =    0.0f;
-	ballsPositions[1][0] =  215.0f; ballsPositions[1][1] =    0.0f;
-	ballsPositions[2][0] =  250.0f; ballsPositions[2][1] =  -20.0f;
-	ballsPositions[3][0] =  250.0f; ballsPositions[3][1] =   20.0f;
-	ballsPositions[4][0] =  285.0f; ballsPositions[4][1] =  -40.0f;
-	ballsPositions[5][0] =  285.0f; ballsPositions[5][1] =   40.0f;
-	ballsPositions[6][0] =  320.0f; ballsPositions[6][1] =  -20.0f;
-	ballsPositions[7][0] =  320.0f; ballsPositions[7][1] =   20.0f;
-	ballsPositions[8][0] =  355.0f; ballsPositions[8][1] =    0.0f;
-	ballsPositions[9][0] =  285.0f; ballsPositions[9][1] =    0.0f;
-
+	//  BILELE DE BILIARD
 
 	//  Se creeaza coordonatele bilelor de biliard
 	for (int i = 0; i < ballsNumber; ++i) {
@@ -366,17 +548,32 @@ void Cleanup(void)
 //  Setarea parametrilor necesari pentru fereastra de vizualizare;
 void Initialize(void)
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);		//  Culoarea de fond a ecranului;
-	CreateShaders();							//  Initilizarea shaderelor;
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);					//  Culoarea de fond a ecranului;
+	CreateShaders();										//  Initilizarea shaderelor;
 	
 	//	Instantierea variabilelor uniforme pentru a "comunica" cu shaderele;
 	myMatrixLocation = glGetUniformLocation(ProgramId, "myMatrix");
 
-	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
+	
+	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);		//  Matricea pentru proiectia ortogonala;
 
 
-	// Incarcarea texturilor in program o singura data pentru a nu umple memoria RAM 
-	// si, implicit, pentru o performanta mai buna a programului
+	//  Initializarea vectorului cu pozitiile bilelor
+	//       coordonata x         |        coordonata y
+	ballsPositions[0][0] = -282.0f; ballsPositions[0][1] = 0.0f;
+	ballsPositions[1][0] = 215.0f; ballsPositions[1][1] = 0.0f;
+	ballsPositions[2][0] = 250.0f; ballsPositions[2][1] = -20.0f;
+	ballsPositions[3][0] = 250.0f; ballsPositions[3][1] = 20.0f;
+	ballsPositions[4][0] = 285.0f; ballsPositions[4][1] = -40.0f;
+	ballsPositions[5][0] = 285.0f; ballsPositions[5][1] = 40.0f;
+	ballsPositions[6][0] = 320.0f; ballsPositions[6][1] = -20.0f;
+	ballsPositions[7][0] = 320.0f; ballsPositions[7][1] = 20.0f;
+	ballsPositions[8][0] = 355.0f; ballsPositions[8][1] = 0.0f;
+	ballsPositions[9][0] = 285.0f; ballsPositions[9][1] = 0.0f;
+
+
+	//  Incarcarea texturilor in program o singura data pentru a nu umple memoria RAM 
+	//  si, implicit, pentru o performanta mai buna a programului
 
 	//  Incarcarea texturii pentru fiecare bila
 	for (int i = 0; i < ballsNumber; ++i) {
