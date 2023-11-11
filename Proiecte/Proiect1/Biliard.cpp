@@ -4,7 +4,7 @@
 //            PROIECT 1 - Joc de Biliard          |
 // ================================================
 
-// Biblioteci
+//  Biblioteci
 #include <string>						 //	 Biblioteca pentru lucrul cu siruri de caractere;
 #include <windows.h>					 //	 Utilizarea functiilor de sistem Windows (crearea de ferestre, manipularea fisierelor si directoarelor);
 #include <stdlib.h>						 //  Biblioteci necesare pentru citirea shaderelor;
@@ -30,7 +30,7 @@ const float PI = 3.14159265359;												 //	 Valoarea lui PI;
 const GLfloat winWidth = 1280, winHeight = 730;								 //	 Dimensiunile ferestrei de afisare;
 const float xMin = -640, xMax = 640.f, yMin = -365.0f, yMax = 365.0f;		 //	 Variabile pentru proiectia ortogonala;
 
-GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, textures[11];		 //  Identificatorii obiectelor de tip OpenGL;
+GLuint VaoId, VboId, EboId, ProgramId, myMatrixLocation, textures[12];		 //  Identificatorii obiectelor de tip OpenGL;
 glm::mat4 myMatrix, resizeMatrix, translationMatrices[10];					 //	 Variabile catre matricile de transformare;
 
 GLfloat ballsPositions[10][2];												 //	 Matrice pentru pozitiile in care se afla bilele;
@@ -311,6 +311,8 @@ void Turn3(void) {
 bool turn4_ball0_hit1, turn4_ball0_hit2, turn4_ball0_hit3;
 //  Variabile pentru testarea faptului ca bilele au ajuns in locul unde ne-am propus sa le mutam
 bool turn4_ball0_destination, turn4_ball3_destination, turn4_ball9_destination;
+//  Variabila pentru testarea finalizarii turn-ului
+bool turn4_finished;
 
 void Turn4(void) {
 	//  Testam daca bila alba a lovit bila rosie
@@ -381,7 +383,10 @@ void Turn4(void) {
 
 	//  Verificam daca toate bilele au ajuns in locul corespunzator
 	if (turn4_ball0_destination && turn4_ball3_destination && turn4_ball9_destination) {
-	//  Oprim animatia
+	    //  Marcam turn-ul ca fiind finalizat
+		turn4_finished = true;
+
+		//  Oprim animatia
 		glutIdleFunc(NULL);
 	}
 
@@ -458,9 +463,10 @@ void CreateShaders(void) {
 void CreateVBO(void) {
 	//  Se initializeaza un vector in care se vor retine datele pentru varfuri;
 	//  Acesta va contine - 4 varfuri pentru masa de biliard
+	//					  - 4 varfuri pentru mesajul de Game Over
 	//					  - ballsNumber * circleVertices varfuri pentru bilele de biliard
 	//  Fiecare varf are 9 valori asociate: 4 pentru pozitie, 3 pentru culoare, 2 pentru texturare (in aceasta ordine);
-	GLfloat Vertices[(ballsNumber * circleVertices + 4) * 9];
+	GLfloat Vertices[(ballsNumber * circleVertices + 8) * 9];
 	
 	
 	//  MASA DE BILIARD
@@ -473,6 +479,16 @@ void CreateVBO(void) {
 	Vertices[27] = -640.0f; Vertices[28] =  365.0f; Vertices[34] = 0.0f; Vertices[35] = 1.0f;
 
 
+	//  MESAJUL DE GAME OVER
+	
+	//  Se adauga manual coordonatele varfurilor mesajului de Game Over
+	//    coordonata x    |     coordonata y      |         coordonate de texturare
+	Vertices[36] = -249.0f; Vertices[37] =  -68.0f; Vertices[43] = 0.0f; Vertices[44] = 0.0f;
+	Vertices[45] =  249.0f; Vertices[46] =  -68.0f; Vertices[52] = 1.0f; Vertices[53] = 0.0f;
+	Vertices[54] =  249.0f; Vertices[55] =   68.0f; Vertices[61] = 1.0f; Vertices[62] = 1.0f;
+	Vertices[63] = -249.0f; Vertices[64] =   68.0f; Vertices[70] = 0.0f; Vertices[71] = 1.0f;
+
+
 	//  BILELE DE BILIARD
 
 	//  Se creeaza coordonatele bilelor de biliard care n-au fost bagate in buzunar
@@ -480,17 +496,17 @@ void CreateVBO(void) {
 		if (!pottedBalls[i])
 		for (int j = 0; j < circleVertices; ++j) {
 			float angle = 2 * PI * j / circleVertices;
-			Vertices[(4 + i * circleVertices + j) * 9]     = radius * cos(angle) + ballsPositions[i][0];    // coordonata x
-			Vertices[(4 + i * circleVertices + j) * 9 + 1] = radius * sin(angle) + ballsPositions[i][1];    // coordonata y
+			Vertices[(8 + i * circleVertices + j) * 9]     = radius * cos(angle) + ballsPositions[i][0];    // coordonata x
+			Vertices[(8 + i * circleVertices + j) * 9 + 1] = radius * sin(angle) + ballsPositions[i][1];    // coordonata y
 
-			Vertices[(4 + i * circleVertices + j) * 9 + 7] = 0.5f * (1.0f + cos(angle));                    // coordonata de texturare x
-			Vertices[(4 + i * circleVertices + j) * 9 + 8] = 0.5f * (1.0f + sin(angle));                    // coordonata de texturare y
+			Vertices[(8 + i * circleVertices + j) * 9 + 7] = 0.5f * (1.0f + cos(angle));                    // coordonata de texturare x
+			Vertices[(8 + i * circleVertices + j) * 9 + 8] = 0.5f * (1.0f + sin(angle));                    // coordonata de texturare y
 		}
 	}
 
 
 	//  Se modifica aceste coordonate pentru toate varfurile din scena, fiind identice
-	for (int i = 0; i < ballsNumber * circleVertices + 4; i++) {
+	for (int i = 0; i < ballsNumber * circleVertices + 8; i++) {
 		Vertices[i * 9 + 2] = 0.0f;							 		 // coordonata z
 		Vertices[i * 9 + 3] = 1.0f;								     // coordonata w
 
@@ -503,6 +519,7 @@ void CreateVBO(void) {
 	//	Indicii care determina ordinea de parcurgere a varfurilor;
 	static const GLuint Indices[] = {
 		0, 1, 2, 3,  //  Indicii pentru masa de biliard
+		4, 5, 6, 7,  //  Indicii pentru mesajul de Game Over
 	};
 
 
@@ -589,7 +606,11 @@ void Initialize(void) {
 
 
 	//  Incarcarea texturilor o singura data pentru o performanta mai buna a programului
-
+	//  Vectorul textures va contine texturile dupa cum urmeaza:
+	//				- de la pozitia 0 la pozitia 9 vor fi texturile pentru bilele de biliard
+	//				- pe pozitia 10 va fi textura pentru masa de biliard
+	//				- pe pozitia 11 va fi textura pentru mesajul de Game Over
+	
 	//  Incarcarea texturii pentru fiecare bila
 	for (int i = 0; i < ballsNumber; ++i) {
 		std::string textureFileName = "./textures/" + std::to_string(i) + "ball.png";
@@ -598,6 +619,9 @@ void Initialize(void) {
 
 	//  Incarcarea texturii pentru masa de biliard
 	LoadTexture("./textures/Table.png", 10);
+
+	//  Incarcarea texturii pentru mesajul de Game Over
+	LoadTexture("./textures/GameOver.png", 11);
 }
 
 
@@ -633,8 +657,20 @@ void RenderFunction(void) {
 			glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 
 			//  Se deseneaza bila de biliard;
-			glDrawArrays(GL_POLYGON, 4 + i * circleVertices, circleVertices);
+			glDrawArrays(GL_POLYGON, 8 + i * circleVertices, circleVertices);
 		}
+	}
+
+
+	//  Desenarea mesajului de Game Over
+	if (turn4_finished) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[11]);
+		glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+
+		myMatrix = resizeMatrix;
+		glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+		glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, (void*)(4 * sizeof(GLuint)));
 	}
 
 	glutSwapBuffers();
