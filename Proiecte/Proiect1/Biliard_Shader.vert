@@ -21,8 +21,7 @@ out vec2 tex_Coord;     //  Transmite textura (de modificat in Shader.frag);
 //  Variabile uniforme;
 uniform mat4 myMatrix;
 
-void main(void)
-{
+void main(void) {
     gl_Position = myMatrix * in_Position;
     ex_Color = in_Color;
     tex_Coord = vec2(texCoord.x, 1 - texCoord.y);

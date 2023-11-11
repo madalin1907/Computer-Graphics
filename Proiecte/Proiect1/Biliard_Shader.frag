@@ -19,7 +19,6 @@ out vec4 out_Color;		//	Culoarea actualizata;
 uniform sampler2D myTexture;
 uniform int drawCode;
 
-void main(void)
-{
+void main(void) {
 	out_Color = texture(myTexture, tex_Coord);
 }
