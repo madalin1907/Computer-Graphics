@@ -496,8 +496,6 @@ xcopy /y /d "$(ProjectDir)lib\x64\SOIL\*.dll" "$(OutDir)" &amp;</Command>
     <None Include="04_05_Shader.vert" />
     <None Include="04_06_Shader.frag" />
     <None Include="04_06_Shader.vert" />
-    <None Include="example.frag" />
-    <None Include="example.vert" />
     <None Include="include\glm\detail\func_common.inl" />
     <None Include="include\glm\detail\func_common_simd.inl" />
     <None Include="include\glm\detail\func_exponential.inl" />

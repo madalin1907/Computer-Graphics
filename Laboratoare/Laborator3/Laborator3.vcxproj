@@ -490,8 +490,6 @@ xcopy /y /d "$(ProjectDir)lib\x64\GLFW\DLLs\*.dll" "$(OutDir)" &amp;</Command>
     <None Include="03_06_Shader.vert" />
     <None Include="03_07_Shader.frag" />
     <None Include="03_07_Shader.vert" />
-    <None Include="example.frag" />
-    <None Include="example.vert" />
     <None Include="include\glm\detail\func_common.inl" />
     <None Include="include\glm\detail\func_common_simd.inl" />
     <None Include="include\glm\detail\func_exponential.inl" />

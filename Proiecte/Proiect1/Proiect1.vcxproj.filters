@@ -1486,4 +1486,42 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\0ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\1ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\2ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\3ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\4ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\5ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\6ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\7ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\8ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\9ball.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\GameOver.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="textures\Table.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

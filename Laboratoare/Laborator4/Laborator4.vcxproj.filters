@@ -49,9 +49,6 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{6c213cb3-1d7b-4eb0-9aac-c49ae62cb4c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\shaders\example">
-      <UniqueIdentifier>{d09f2fd9-6e60-4229-b42e-38b00996fa4c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\template-built-ins">
       <UniqueIdentifier>{cd7f18ee-6be3-4aad-bf44-1ac29b4db1f9}</UniqueIdentifier>
     </Filter>
@@ -1466,12 +1463,6 @@
     </None>
     <None Include="include\glm\gtx\wrap.inl">
       <Filter>Header Files\template-built-ins\glm\gtx</Filter>
-    </None>
-    <None Include="example.vert">
-      <Filter>Resource Files\shaders\example</Filter>
-    </None>
-    <None Include="example.frag">
-      <Filter>Resource Files\shaders\example</Filter>
     </None>
     <None Include="lib\x64\GL\DLLs\freeglut.dll">
       <Filter>Resource Files\template-built-ins\DLLs\64b</Filter>
