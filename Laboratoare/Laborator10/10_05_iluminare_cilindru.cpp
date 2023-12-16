@@ -182,8 +182,8 @@ void CreateVBO(void)
 		Colors[NR_MERIDIANE_CILINDRU + merid] = glm::vec3(1.0f, 0.0f, 0.0);
 		Normals[NR_MERIDIANE_CILINDRU +merid] = glm::vec3(x_vf, y_vf, 0.0);
 
-		Indices[merid] = merid; // pentru cercul de sus
-		Indices[NR_MERIDIANE_CILINDRU + merid] = NR_MERIDIANE_CILINDRU + merid; // pentru cercul de jos
+		Indices[merid] = merid; // pentru cercul de jos
+		Indices[NR_MERIDIANE_CILINDRU + merid] = NR_MERIDIANE_CILINDRU + merid; // pentru cercul de sus
 
 		// indicii pentru fetele laterale
 		Indices[2 * NR_MERIDIANE_CILINDRU + 4 * merid] = merid;
@@ -320,10 +320,10 @@ void RenderFunction(void)
 		break;
 	};
 
-	// desenarea bazei superioare
+	// desenarea bazei inferioare
 	glDrawElements(GL_TRIANGLE_FAN, NR_MERIDIANE_CILINDRU, GL_UNSIGNED_SHORT, 0);
 
-	// desenarea bazei inferioare
+	// desenarea bazei superioare
 	glDrawElements(GL_TRIANGLE_FAN, NR_MERIDIANE_CILINDRU, GL_UNSIGNED_SHORT, (GLvoid*)(NR_MERIDIANE_CILINDRU * sizeof(GLushort)));
 
 	// desenarea fetelor laterale
