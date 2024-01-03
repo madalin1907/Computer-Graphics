@@ -99,7 +99,7 @@
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Header Files\template-built-ins\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="11_05_ceata.cpp">
+    <ClCompile Include="11_04_umbra_cilindru.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

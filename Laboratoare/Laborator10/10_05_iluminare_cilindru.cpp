@@ -176,11 +176,11 @@ void CreateVBO(void)
 
 		Vertices[merid] = glm::vec4(x_vf, y_vf, -50.0, 1.0);
 		Colors[merid] = glm::vec3(1.0f, 1.0f, 0.0);
-		Normals[merid] = glm::vec3(x_vf, y_vf, 0.0);
+		Normals[merid] = glm::vec3(x_vf, y_vf, -50.0);
 
 		Vertices[NR_MERIDIANE_CILINDRU + merid] = glm::vec4(x_vf, y_vf, 50.0, 1.0);
 		Colors[NR_MERIDIANE_CILINDRU + merid] = glm::vec3(1.0f, 0.0f, 0.0);
-		Normals[NR_MERIDIANE_CILINDRU +merid] = glm::vec3(x_vf, y_vf, 0.0);
+		Normals[NR_MERIDIANE_CILINDRU +merid] = glm::vec3(x_vf, y_vf, 50.0);
 
 		Indices[merid] = merid; // pentru cercul de jos
 		Indices[NR_MERIDIANE_CILINDRU + merid] = NR_MERIDIANE_CILINDRU + merid; // pentru cercul de sus
@@ -307,7 +307,7 @@ void RenderFunction(void)
 
 	// variable relevante pentru iluminare, de transferat in shader
 	glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-	glUniform3f(lightPosLoc, 0.0f, -65.0f, 0.0f);
+	glUniform3f(lightPosLoc, 150.0f, 0.0f, 0.0f);
 	glUniform3f(viewPosLoc, Obsx, Obsy, Obsz);
 
 	switch (rendermode)
