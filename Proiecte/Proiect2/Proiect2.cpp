@@ -27,7 +27,7 @@ GLuint
 	VaoGround, VboGround, EboGround,
 	VaoTreeTrunk, VboTreeTrunk, EboTreeTrunk,
 	VaoTreeCrown, VboTreeCrown, EboTreeCrown,
-
+	VaoTreeStar, VboTreeStar, EboTreeStar,
 	ColorBufferId,
 	ProgramId,
 	myMatrixLocation,
@@ -65,7 +65,7 @@ glm::mat4 projection;
 const GLfloat winWidth = 1280.0f, winHeight = 730.0f;
 
 // sursa de lumina
-float xL = -200.f, yL = 0.0f, zL = 400.0f;
+float xL = 0.f, yL = 200.0f, zL = 400.0f;
 
 // matricea umbrei
 float matrUmbra[4][4];
@@ -279,8 +279,8 @@ void CreateVAOTreeCrown(void) {
 		Vertices[10 * i + 6] = 0.0;
 
 		// normalele varfului
-		Vertices[10 * i + 7] = INALTIME_CILINDRU * cos(u);
-		Vertices[10 * i + 8] = INALTIME_CILINDRU * sin(u);
+		Vertices[10 * i + 7] = RAZA_CON * cos(u);
+		Vertices[10 * i + 8] = RAZA_CON * sin(u);
 		Vertices[10 * i + 9] = INALTIME_CILINDRU;
 
 		// indicii pentru baza conului
@@ -338,6 +338,68 @@ void CreateVAOTreeCrown(void) {
 }
 
 
+
+void CreateVAOTreeStar(void) {
+	GLfloat Vertices[] = {
+	// coordonate                // culori		  // normale
+	//CERCU MIC
+
+	 0.0f, 0.0f, 250.0f, 1.0f,  1.0f, 1.0f, 0.0f,   0.0f, 0.0f, 250.0f,		// jos	
+	 9.0f, 0.0f, 258.0f, 1.0f,  1.0f, 1.0f, 0.0f,   9.0f, 0.0f, 258.0f,		// dreapta jos
+	 7.0f, 0.0f, 269.0f, 1.0f,  1.0f, 1.0f, 0.0f,   7.0f, 0.0f, 269.0f,		// dreapta sus
+	-7.0f, 0.0f, 269.0f, 1.0f,  1.0f, 1.0f, 0.0f,  -7.0f, 0.0f, 269.0f,		// stanga sus
+	-9.0f, 0.0f, 258.0f, 1.0f,  1.0f, 1.0f, 0.0f,  -9.0f, 0.0f, 258.0f,		// stanga jos
+
+	// CERCU MARE
+	 15.0f, 0.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,   15.0f, 0.0f, 240.0f,		// dreapta jos
+	 25.0f, 0.0f, 265.0f, 1.0f,   1.0f, 1.0f, 0.0f,   25.0f, 0.0f, 265.0f,		// dreapta sus
+	 0.0f, 0.0f, 284.0f, 1.0f,    1.0f, 1.0f, 0.0f,   0.0f, 0.0f, 284.0f, 		// sus
+	-25.0f, 0.0f, 265.0f, 1.0f,   1.0f, 1.0f, 0.0f,   -25.0f, 0.0f, 265.0f,		// stanga sus
+	 -15.0f, 0.0f, 240.0f, 1.0f,  1.0f, 1.0f, 0.0f,   -15.0f, 0.0f, 240.0f,		// stanga jos
+
+	// CENTRU STELEI
+	 0.0f, 7.0f, 260.0f, 1.0f,    1.0f, 0.3f, 0.0f,   0.0f, 7.0f, 260.0f,		// mijloc spate
+	 0.0f, -7.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,   0.0f, -7.0f, 260.0f		// mijloc fata
+
+	};
+
+	GLubyte Indices[] = {
+		 10, 0, 5, 10, 5, 1,
+		 10, 1, 6, 10, 6, 2, 
+		 10, 2, 7, 10, 7, 3, 
+		 10, 3, 8, 10, 8, 4,
+		 10, 4, 9, 10, 9, 0,
+
+		 11, 0, 5, 11, 5, 1,
+		 11, 1, 6, 11, 6, 2,
+		 11, 2, 7, 11, 7, 3,
+		 11, 3, 8, 11, 8, 4,
+		 11, 4, 9, 11, 9, 0,
+	};
+
+	glGenVertexArrays(1, &VaoTreeStar);
+	glBindVertexArray(VaoTreeStar);
+
+	glGenBuffers(1, &VboTreeStar);
+	glGenBuffers(1, &EboTreeStar);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VboTreeStar);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EboTreeStar);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+
+	// atributul 0 = pozitie
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
+	// atributul 1 = culoare
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(4 * sizeof(GLfloat)));
+	// atributul 2 = normale
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+}
+
 void DestroyVBO(void) {
 	//  Eliberarea atributelor din shadere (pozitie, culoare, normale etc.)
 	glDisableVertexAttribArray(2);
@@ -356,11 +418,16 @@ void DestroyVBO(void) {
 	glDeleteBuffers(1, &VboTreeCrown);
 	glDeleteBuffers(1, &EboTreeCrown);
 
+	glDeleteBuffers(1, &VboTreeStar);
+	glDeleteBuffers(1, &EboTreeStar);
+
+
 	//  Dezactivarea VAO (Vertex Array Object)
 	glBindVertexArray(0);
 	glDeleteVertexArrays(1, &VaoGround);
 	glDeleteVertexArrays(1, &VaoTreeTrunk);
 	glDeleteVertexArrays(1, &VaoTreeCrown);
+	glDeleteVertexArrays(1, &VaoTreeStar);
 }
 
 
@@ -389,6 +456,7 @@ void Initialize(void) {
 	CreateVAOGround();
 	CreateVAOTreeTrunk();
 	CreateVAOTreeCrown();
+	CreateVAOTreeStar();
 
 	CreateShaders();
 
@@ -466,6 +534,7 @@ void RenderFunction(void) {
 	// desenarea fetelor laterale
 	glDrawElements(GL_QUADS, 4 * NR_MERIDIANE_CILINDRU, GL_UNSIGNED_BYTE, (GLvoid*)(2 * NR_MERIDIANE_CILINDRU * sizeof(GLubyte)));
 
+	
 	// desenare umbra
 	codCol = 1;
 	glUniform1i(codColLocation, codCol);
@@ -491,6 +560,23 @@ void RenderFunction(void) {
 	codCol = 1;
 	glUniform1i(codColLocation, codCol);
 	glDrawElements(GL_TRIANGLES, 3 * NR_MERIDIANE_CON, GL_UNSIGNED_BYTE, (GLvoid*)(NR_MERIDIANE_CON * sizeof(GLubyte)));
+
+
+	// DESENARE STEA
+
+	glBindVertexArray(VaoTreeStar);
+
+	codCol = 0;
+	glUniform1i(codColLocation, codCol);
+
+
+	glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_BYTE, 0);
+	
+	// desenare umbra
+	codCol = 1;
+	glUniform1i(codColLocation, codCol);
+	glDrawElements(GL_TRIANGLES, 60, GL_UNSIGNED_BYTE, 0);
+
 
 	glutSwapBuffers();
 	glFlush();
