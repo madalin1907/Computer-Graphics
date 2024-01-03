@@ -46,6 +46,11 @@ int codCol;
 // matrice utilizate
 glm::mat4 myMatrix, matrRot;
 
+
+// valoarea lui PI
+float const PI = 3.141592f;
+
+
 // elemente pentru matricea de vizualizare
 float Refx = 0.0f, Refy = 0.0f, Refz = 100.0f;
 float alpha = PI / 8, beta = 0.0f, dist = 400.0f;
@@ -65,9 +70,6 @@ float xL = -200.f, yL = 0.0f, zL = 400.0f;
 // matricea umbrei
 float matrUmbra[4][4];
 
-
-// valoarea lui PI
-float const PI = 3.141592f;
 
 // Elemente pentru reprezentarea cilindrului (trunchiul bradului)
 const int NR_MERIDIANE_CILINDRU = 20, RAZA_CILINDRU = 25, INALTIME_CILINDRU = 75;
@@ -498,7 +500,7 @@ void RenderFunction(void) {
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-	glutInitWindowSize(winWidth, winHeight);								//  Dimensiunile ferestrei de vizualizare
+	glutInitWindowSize(winWidth, winHeight);					//  Dimensiunile ferestrei de vizualizare
 	glutInitWindowPosition(25, 25);								//  Pozitia initiala a ferestrei de vizualizare
 	glutCreateWindow("Peisaj de iarna");						//	Creeaza fereastra de vizualizare, indicand numele acesteia;
 
