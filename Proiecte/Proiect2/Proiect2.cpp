@@ -28,6 +28,7 @@ GLuint
 	VaoTreeTrunk, VboTreeTrunk, EboTreeTrunk,
 	VaoTreeCrown, VboTreeCrown, EboTreeCrown,
 	VaoTreeStar, VboTreeStar, EboTreeStar,
+
 	ColorBufferId,
 	ProgramId,
 	myMatrixLocation,
@@ -53,8 +54,8 @@ float const PI = 3.141592f;
 
 // elemente pentru matricea de vizualizare
 float Refx = 0.0f, Refy = 0.0f, Refz = 100.0f;
-float alpha = PI / 8, beta = 0.0f, dist = 400.0f;
-float Obsx, Obsy, Obsz;
+float alpha = PI / 8, beta = 0.0f, dist = 450.0f;
+float Obsx, Obsy, Obsz;	
 float Vx = 0.0, Vy = 0.0, Vz = 1.0;
 glm::mat4 view;
 
@@ -65,7 +66,7 @@ glm::mat4 projection;
 const GLfloat winWidth = 1280.0f, winHeight = 730.0f;
 
 // sursa de lumina
-float xL = 0.f, yL = 200.0f, zL = 400.0f;
+float xL = 200.0f, yL = 0.0f, zL = 400.0f;
 
 // matricea umbrei
 float matrUmbra[4][4];
@@ -128,16 +129,32 @@ void processSpecialKeys(int key, int xx, int yy) {
 // GROUND
 void CreateVAOGround(void) {
 	GLfloat Vertices[] = {
-		       // coordonate                // culori		  // normale
-	   -1500.0f, -1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.9f,  0.0f, 0.0f, 1.0f,
-		1500.0f, -1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.9f,  0.0f, 0.0f, 1.0f,
-		1500.0f,  1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.9f,  0.0f, 0.0f, 1.0f,
-	   -1500.0f,  1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.9f,  0.0f, 0.0f, 1.0f
+		// GRADINA DIN STANGA
+		        // coordonate               // culori		   // normale
+	   -800.0f, -800.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		800.0f, -800.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		800.0f, -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -800.0f, -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
+
+	   // ALEEA DIN MIJLOC
+				// coordonate               // culori		   // normale
+	   -800.0f, -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		800.0f, -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		800.0f,  200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -800.0f,  200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
+		
+	   // GRADINA DIN DREAPTA
+				// coordonate               // culori		   // normale
+	   -800.0f,  200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		800.0f,  200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		800.0f,  800.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -800.0f,  800.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
 	};
 
 	GLubyte Indices[] = {
-		 1, 2, 0,
-		 2, 0, 3
+		 0, 1,  2,  3,  // gradina din stanga
+		 4, 5,  6,  7,  // aleea din mijloc
+		 8, 9, 10, 11,  // gradina din dreapta
 	};
 
 	glGenVertexArrays(1, &VaoGround);
@@ -256,8 +273,6 @@ void CreateVAOTreeCrown(void) {
 	GLfloat Vertices[10 * (NR_MERIDIANE_CON + 1)];
 	GLubyte Indices[4 * NR_MERIDIANE_CON];
 
-	// COROANA (coroana bradului)
-	// 
 	// Se creeaza baza conului (un cerc)
 	for (int i = 0; i < NR_MERIDIANE_CON; ++i)
 	{
@@ -279,9 +294,9 @@ void CreateVAOTreeCrown(void) {
 		Vertices[10 * i + 6] = 0.0;
 
 		// normalele varfului
-		Vertices[10 * i + 7] = RAZA_CON * cos(u);
-		Vertices[10 * i + 8] = RAZA_CON * sin(u);
-		Vertices[10 * i + 9] = INALTIME_CILINDRU;
+		Vertices[10 * i + 7] = x;
+		Vertices[10 * i + 8] = y;
+		Vertices[10 * i + 9] = z - 50.0;
 
 		// indicii pentru baza conului
 		Indices[i] = i;
@@ -303,7 +318,7 @@ void CreateVAOTreeCrown(void) {
 	// normalele varfului
 	Vertices[10 * NR_MERIDIANE_CON + 7] = 0.0;
 	Vertices[10 * NR_MERIDIANE_CON + 8] = 0.0;
-	Vertices[10 * NR_MERIDIANE_CON + 9] = INALTIME_CILINDRU + INALTIME_CON;
+	Vertices[10 * NR_MERIDIANE_CON + 9] = 1.0;
 
 	// Se creeaza indicii pentru fetele conului
 	for (int i = 0; i < NR_MERIDIANE_CON; ++i)
@@ -341,26 +356,26 @@ void CreateVAOTreeCrown(void) {
 
 void CreateVAOTreeStar(void) {
 	GLfloat Vertices[] = {
-	// coordonate                // culori		  // normale
-	//CERCU MIC
+	// CERCUL MIC
+		    // coordonate               // culori		      // normale
+	  0.0f,   0.0f, 250.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,   0.0f, 250.0f,		// jos	
+	  0.0f,  10.0f, 258.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  10.0f, 258.0f,		// dreapta jos
+	  0.0f,   7.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,   7.0f, 269.0f,		// dreapta sus
+	  0.0f,  -7.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  -7.0f, 269.0f,		// stanga sus
+	  0.0f, -10.0f, 258.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -10.0f, 258.0f,		// stanga jos
 
-	 0.0f, 0.0f, 250.0f, 1.0f,  1.0f, 1.0f, 0.0f,   0.0f, 0.0f, 250.0f,		// jos	
-	 9.0f, 0.0f, 258.0f, 1.0f,  1.0f, 1.0f, 0.0f,   9.0f, 0.0f, 258.0f,		// dreapta jos
-	 7.0f, 0.0f, 269.0f, 1.0f,  1.0f, 1.0f, 0.0f,   7.0f, 0.0f, 269.0f,		// dreapta sus
-	-7.0f, 0.0f, 269.0f, 1.0f,  1.0f, 1.0f, 0.0f,  -7.0f, 0.0f, 269.0f,		// stanga sus
-	-9.0f, 0.0f, 258.0f, 1.0f,  1.0f, 1.0f, 0.0f,  -9.0f, 0.0f, 258.0f,		// stanga jos
+	// CERCUL MARE
+		    // coordonate               // culori		      // normale
+	  0.0f,  17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  17.0f, 240.0f,		// dreapta jos
+	  0.0f,  25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  25.0f, 269.0f,		// dreapta sus
+	  0.0f,   0.0f, 285.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,   0.0f, 285.0f, 		// sus
+	  0.0f, -25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -25.0f, 269.0f,		// stanga sus
+	  0.0f, -17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -17.0f, 240.0f,		// stanga jos
 
-	// CERCU MARE
-	 15.0f, 0.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,   15.0f, 0.0f, 240.0f,		// dreapta jos
-	 25.0f, 0.0f, 265.0f, 1.0f,   1.0f, 1.0f, 0.0f,   25.0f, 0.0f, 265.0f,		// dreapta sus
-	 0.0f, 0.0f, 284.0f, 1.0f,    1.0f, 1.0f, 0.0f,   0.0f, 0.0f, 284.0f, 		// sus
-	-25.0f, 0.0f, 265.0f, 1.0f,   1.0f, 1.0f, 0.0f,   -25.0f, 0.0f, 265.0f,		// stanga sus
-	 -15.0f, 0.0f, 240.0f, 1.0f,  1.0f, 1.0f, 0.0f,   -15.0f, 0.0f, 240.0f,		// stanga jos
-
-	// CENTRU STELEI
-	 0.0f, 7.0f, 260.0f, 1.0f,    1.0f, 0.3f, 0.0f,   0.0f, 7.0f, 260.0f,		// mijloc spate
-	 0.0f, -7.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,   0.0f, -7.0f, 260.0f		// mijloc fata
-
+	// CENTRUL STELEI
+		    // coordonate               // culori		      // normale
+	 -7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,   -7.0f,   0.0f, 260.0f,		// mijloc spate
+	  7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,    7.0f,   0.0f, 260.0f,		// mijloc fata
 	};
 
 	GLubyte Indices[] = {
@@ -492,11 +507,11 @@ void RenderFunction(void) {
 	glUniformMatrix4fv(projLocation, 1, GL_FALSE, &projection[0][0]);
 
 	//  matricea pentru umbra
-	float D = -0.5f;
-	matrUmbra[0][0] = zL + D; matrUmbra[0][1] = 0; matrUmbra[0][2] = 0; matrUmbra[0][3] = 0;
-	matrUmbra[1][0] = 0; matrUmbra[1][1] = zL + D; matrUmbra[1][2] = 0; matrUmbra[1][3] = 0;
-	matrUmbra[2][0] = -xL; matrUmbra[2][1] = -yL; matrUmbra[2][2] = D; matrUmbra[2][3] = -1;
-	matrUmbra[3][0] = -D * xL; matrUmbra[3][1] = -D * yL; matrUmbra[3][2] = -D * zL; matrUmbra[3][3] = zL;
+	float D = -3.0;
+	matrUmbra[0][0] = zL + D;   matrUmbra[0][1] = 0;        matrUmbra[0][2] = 0;        matrUmbra[0][3] = 0;
+	matrUmbra[1][0] = 0;        matrUmbra[1][1] = zL + D;   matrUmbra[1][2] = 0;        matrUmbra[1][3] = 0;
+	matrUmbra[2][0] = -xL;      matrUmbra[2][1] = -yL;      matrUmbra[2][2] = D;        matrUmbra[2][3] = -1;
+	matrUmbra[3][0] = -D * xL;  matrUmbra[3][1] = -D * yL;  matrUmbra[3][2] = -D * zL;  matrUmbra[3][3] = zL;
 	glUniformMatrix4fv(matrUmbraLocation, 1, GL_FALSE, &matrUmbra[0][0]);
 
 	//  Variabile uniforme pentru iluminare
@@ -518,7 +533,7 @@ void RenderFunction(void) {
 	myMatrix = glm::mat4(1.0f);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+	glDrawElements(GL_QUADS, 12, GL_UNSIGNED_BYTE, 0);
 
 	// --- DESENARE BRAD ---
 	
