@@ -24,7 +24,7 @@ uniform int codCol;
 void main(void) {
     // fog
     float fogDistance = length(inViewPos - FragPos);
-    float fogAmount = smoothstep(150.0f, 800.0f, fogDistance);
+    float fogAmount = smoothstep(500.0f, 3500.0f, fogDistance);
 
     // pentru codCol == 0 este aplicata iluminarea
     if (codCol == 0) {
@@ -35,12 +35,11 @@ void main(void) {
         // Diffuse 
         vec3 normala = normalize(Normal);
         vec3 lightDir = normalize(inLightPos - FragPos);
-        //vec3 lightDir = normalize(dir);  // cazul unei surse directionale
         float diff = max(dot(normala, lightDir), 0.0);
         vec3 diffuse = diff * lightColor;
     
         // Specular
-        float specularStrength = 0.5f;
+        float specularStrength = 0.1f;
         vec3 viewDir = normalize(inViewPos - FragPos);  //vector catre observator normalizat (V)
         vec3 reflectDir = reflect(-lightDir, normala);  // reflexia razei de lumina (R)
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
@@ -56,9 +55,10 @@ void main(void) {
     // pentru codCol == 1 este desenata umbra
     if (codCol == 1) {
         vec3 shadowColor = vec3(0.1, 0.1, 0.1);
-        vec3 result = mix(shadowColor, fogColor, fogAmount);
-
-		//out_Color = vec4(result, 1.0);
         out_Color = vec4(shadowColor, 1.0f);
+        
+        // fog
+        //vec3 result = mix(shadowColor, fogColor, fogAmount);
+        //out_Color = vec4(result, 1.0);
     }
 }

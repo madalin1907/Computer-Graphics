@@ -57,7 +57,7 @@ float const PI = 3.141592f;
 
 // elemente pentru matricea de vizualizare
 float Refx = 0.0f, Refy = 0.0f, Refz = 100.0f;
-float alpha = PI / 8, beta = 0.0f, dist = 450.0f;
+float alpha = PI / 8, beta = 0.0f, dist = 750.0f;
 float Obsx, Obsy, Obsz;
 float Vx = 0.0, Vy = 0.0, Vz = 1.0;
 glm::mat4 view;
@@ -69,7 +69,7 @@ glm::mat4 projection;
 const GLfloat winWidth = 1280.0f, winHeight = 730.0f;
 
 // sursa de lumina
-float xL = 200.0f, yL = 0.0f, zL = 400.0f;
+float xL = 400.0f, yL = 0.0f, zL = 850.0f;
 
 // matricea umbrei
 float matrUmbra[4][4];
@@ -134,24 +134,24 @@ void CreateVAOGround(void) {
 	GLfloat Vertices[] = {
 		// GRADINA DIN STANGA
 				// coordonate               // culori		   // normale
-	   -800.0f, -800.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
-		800.0f, -800.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
-		800.0f, -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
-	   -800.0f, -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
+	   -1500.0f, -1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		1500.0f, -1500.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		1500.0f,  -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -1500.0f,  -200.0f,  0.0f, 1.0f,  1.0f, 1.0f, 0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
 
 	   // ALEEA DIN MIJLOC
 				// coordonate               // culori		   // normale
-	   -800.0f, -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
-		800.0f, -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
-		800.0f,  200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
-	   -800.0f,  200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
+	   -1500.0f,  -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		1500.0f,  -200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		1500.0f,   200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -1500.0f,   200.0f,  0.0f, 1.0f,  0.4f, 0.4f,  0.4f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
 
 	   // GRADINA DIN DREAPTA
 				// coordonate               // culori		   // normale
-	   -800.0f,  200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
-		800.0f,  200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
-		800.0f,  800.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
-	   -800.0f,  800.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
+	   -1500.0f,   200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga sus (mai departe de observator)
+		1500.0f,   200.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,		// stanga jos (mai aproape de observator)
+		1500.0f,  1500.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f,	    // dreapta jos (mai aproape de observator)
+	   -1500.0f,  1500.0f,  0.0f, 1.0f,  1.0f, 1.0f,  0.95f,  0.0f, 0.0f, 1.0f, 		// dreapta sus (mai departe de observator)
 	};
 
 	GLubyte Indices[] = {
@@ -368,17 +368,17 @@ void CreateVAOTreeStar(void) {
 		  0.0f, -10.0f, 258.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -10.0f, 258.0f,		// stanga jos
 
 		  // CERCUL MARE
-				  // coordonate               // culori		      // normale
-			0.0f,  17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  17.0f, 240.0f,		// dreapta jos
-			0.0f,  25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  25.0f, 269.0f,		// dreapta sus
-			0.0f,   0.0f, 285.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,   0.0f, 285.0f, 		// sus
-			0.0f, -25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -25.0f, 269.0f,		// stanga sus
-			0.0f, -17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -17.0f, 240.0f,		// stanga jos
+				// coordonate               // culori		      // normale
+		  0.0f,  17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  17.0f, 240.0f,		// dreapta jos
+		  0.0f,  25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,  25.0f, 269.0f,		// dreapta sus
+		  0.0f,   0.0f, 285.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f,   0.0f, 285.0f, 		// sus
+		  0.0f, -25.0f, 269.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -25.0f, 269.0f,		// stanga sus
+		  0.0f, -17.0f, 240.0f, 1.0f,   1.0f, 1.0f, 0.0f,    0.0f, -17.0f, 240.0f,		// stanga jos
 
-			// CENTRUL STELEI
-					// coordonate               // culori		      // normale
-			 -7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,   -7.0f,   0.0f, 260.0f,		// mijloc spate
-			  7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,    7.0f,   0.0f, 260.0f,		// mijloc fata
+		// CENTRUL STELEI
+				// coordonate               // culori		      // normale
+		 -7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,   -7.0f,   0.0f, 260.0f,		// mijloc spate
+		  7.0f,   0.0f, 260.0f, 1.0f,   1.0f, 0.3f, 0.0f,    7.0f,   0.0f, 260.0f,		// mijloc fata
 	};
 
 	GLubyte Indices[] = {
@@ -425,39 +425,73 @@ void CreateVAOHouse(void) {
 		// PERETII CASEI (CUBUL)
 		// 
 		// Baza de jos
-			       // coordonate                // culori		      // normale
-		  -500.0f, -300.0f,   0.0f, 1.0f,   1.0f, 1.0f, 0.0f,    -1.0f, -1.0f, -1.0f,    // stanga sus
-		     0.0f, -300.0f,   0.0f, 1.0f,   1.0f, 1.0f, 0.0f,     1.0f, -1.0f, -1.0f,    // stanga jos
-	         0.0f,  300.0f,   0.0f, 1.0f,   1.0f, 1.0f, 0.0f,     1.0f,  1.0f, -1.0f,    // dreapta jos
-	      -500.0f,  300.0f,   0.0f, 1.0f,   1.0f, 1.0f, 0.0f,    -1.0f,  1.0f, -1.0f,    // dreapta sus
+			       // coordonate                // culori		         // normale
+		  -500.0f, -300.0f,   0.0f, 1.0f,  0.93f, 0.71f, 0.14f,   -500.0f, -300.0f,   0.0f,    // stanga sus
+		     0.0f, -300.0f,   0.0f, 1.0f,  0.93f, 0.71f, 0.14f,      0.0f, -300.0f,   0.0f,    // stanga jos
+	         0.0f,  300.0f,   0.0f, 1.0f,  0.93f, 0.71f, 0.14f,      0.0f,  300.0f,   0.0f,    // dreapta jos
+	      -500.0f,  300.0f,   0.0f, 1.0f,  0.93f, 0.71f, 0.14f,   -500.0f,  300.0f,   0.0f,    // dreapta sus
 
 		// Baza de sus
 			       // coordonate                // culori		      // normale
-		  -500.0f, -300.0f, 250.0f, 1.0f,   1.0f, 1.0f, 0.0f,    -1.0f, -1.0f,  1.0f,    // stanga sus
-		     0.0f, -300.0f, 250.0f, 1.0f,   1.0f, 1.0f, 0.0f,     1.0f, -1.0f,  1.0f,    // stanga jos
-		     0.0f,  300.0f, 250.0f, 1.0f,   1.0f, 1.0f, 0.0f,     1.0f,  1.0f,  1.0f,    // dreapta jos
-		  -500.0f,  300.0f, 250.0f, 1.0f,   1.0f, 1.0f, 0.0f,    -1.0f,  1.0f,  1.0f,    // dreapta sus
+		  -500.0f, -300.0f, 250.0f, 1.0f,  0.93f, 0.71f, 0.14f,   -500.0f, -300.0f, 250.0f,    // stanga sus
+		     0.0f, -300.0f, 250.0f, 1.0f,  0.93f, 0.71f, 0.14f,      0.0f, -300.0f, 250.0f,    // stanga jos
+		     0.0f,  300.0f, 250.0f, 1.0f,  0.93f, 0.71f, 0.14f,      0.0f,  300.0f, 250.0f,    // dreapta jos
+		  -500.0f,  300.0f, 250.0f, 1.0f,  0.93f, 0.71f, 0.14f,    500.0f,  300.0f, 250.0f,    // dreapta sus
 
 		
 		// ACOPERISUL CASEI (TRUNCHIUL DE PIRAMIDA)
 		//
 		// Baza de jos a acoperisului
-				   // coordonate                 // culori		        // normale
-		  -600.0f, -400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -1.0f, -1.0f, -1.0f,    // stanga sus
-		   100.0f, -400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,     1.0f, -1.0f, -1.0f,    // stanga jos
-		   100.0f,  400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,     1.0f,  1.0f, -1.0f,    // dreapta jos
-		  -600.0f,  400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -1.0f,  1.0f, -1.0f,    // dreapta sus
+				   // coordonate                 // culori		         // normale
+		  -600.0f, -400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -600.0f, -400.0f, 250.0f,    // stanga sus
+		   100.0f, -400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,     100.0f, -400.0f, 250.0f,    // stanga jos
+		   100.0f,  400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,     100.0f,  400.0f, 250.0f,    // dreapta jos
+		  -600.0f,  400.0f, 250.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -600.0f,  400.0f, 250.0f,    // dreapta sus
 
 		// Baza de sus a acoperisului
 				   // coordonate                 // culori		        // normale
-		  -375.0f, -175.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -1.0f, -1.0f,  1.0f,    // stanga sus
-		   -75.0f, -175.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,     1.0f, -1.0f,  1.0f,    // stanga jos
-		   -75.0f,  175.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,     1.0f,  1.0f,  1.0f,    // dreapta jos
-		  -375.0f,  175.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -1.0f,  1.0f,  1.0f,    // dreapta sus
+		  -425.0f, -225.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -425.0f, -225.0f, 425.0f,    // stanga sus
+		   -75.0f, -225.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,     -75.0f, -225.0f, 425.0f,    // stanga jos
+		   -75.0f,  225.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,     -75.0f,  225.0f, 425.0f,    // dreapta jos
+		  -425.0f,  225.0f, 425.0f, 1.0f,   0.6f, 0.17f, 0.14f,    -425.0f,  225.0f, 425.0f,    // dreapta sus
+
+
+		// USA CASEI
+				   // coordonate                 // culori		        // normale
+		    3.0f,  -45.0f,   0.0f, 1.0f,    0.6f, 0.17f, 0.14f,     3.0f,  -45.0f,   0.0f,    // stanga jos
+		    3.0f,   45.0f,   0.0f, 1.0f,    0.6f, 0.17f, 0.14f,     3.0f,   45.0f,   0.0f,    // dreapta jos
+		    3.0f,   45.0f, 150.0f, 1.0f,    0.6f, 0.17f, 0.14f,     3.0f,   45.0f, 150.0f,    // dreapta sus
+		    3.0f,  -45.0f, 150.0f, 1.0f,    0.6f, 0.17f, 0.14f,     3.0f,  -45.0f, 150.0f,    // stanga sus
+
+
+		// FERESTRELE CASEI
+				   // coordonate                // culori		       // normale
+		    3.0f,  -60.0f, 100.0f, 1.0f,    0.0f,  0.7f,  1.0f,     3.0f,  -60.0f, 120.0f,    // stanga jos
+			3.0f,   60.0f, 100.0f, 1.0f,    0.0f,  0.7f,  1.0f,     3.0f,   60.0f, 120.0f,    // dreapta jos
+			3.0f,   60.0f, 220.0f, 1.0f,    0.0f,  0.7f,  1.0f,     3.0f,   60.0f, 240.0f,    // dreapta sus
+			3.0f,  -60.0f, 220.0f, 1.0f,    0.0f,  0.7f,  1.0f,     3.0f,  -60.0f, 240.0f,    // stanga sus
+
+
+		// HORNUL CASEI (paralelipiped)
+		// 
+		// Baza de jos a hornului 
+				  // coordonate               // culori		          // normale
+		 -260.0f,  250.0f, 365.0f, 1.0f,   0.3f, 0.0f, 0.0f,    -180.0f,  280.0f, 480.0f,     // stanga sus
+		 -240.0f,  250.0f, 365.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -170.0f,  280.0f, 480.0f,     // stanga jos
+		 -240.0f,  270.0f, 365.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -170.0f,  290.0f, 480.0f,     // dreapta jos
+		 -260.0f,  270.0f, 365.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -180.0f,  290.0f, 480.0f,     // dreapta sus
+
+		// Baza de sus a hornului
+		// coordonate               // culori		          // normale
+		 -260.0f,  250.0f, 440.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -180.0f,  280.0f, 500.0f,     // stanga sus
+		 -240.0f,  250.0f, 440.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -170.0f,  280.0f, 500.0f,     // stanga jos
+		 -240.0f,  270.0f, 440.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -170.0f,  290.0f, 500.0f,     // dreapta jos
+		 -260.0f,  270.0f, 440.0f, 1.0f,   0.0f, 0.0f, 0.0f,    -180.0f,  290.0f, 500.0f,     // dreapta sus
 	};
 
+
 	GLubyte Indices[] = {
-		// PERETII CASEI (CUBUL)
+	   // PERETII CASEI (CUBUL)
 		0, 1, 2,  0, 2, 3,		// baza inferioara
 		4, 5, 6,  4, 6, 7,		// baza superioara
 		1, 2, 6,  1, 6, 5,		// fata
@@ -465,14 +499,29 @@ void CreateVAOHouse(void) {
 		0, 1, 5,  0, 5, 4,		// stanga
 		3, 2, 6,  3, 6, 7,		// dreapta
 
-		// ACOPERISUL CASEI (TRUNCHIUL DE PIRAMIDA)
+	   // ACOPERISUL CASEI (TRUNCHIUL DE PIRAMIDA)
 		8,  9, 10,   8, 10, 11,	// baza inferioara
 	   12, 13, 14,  12, 14, 15,	// baza superioara
 	    9, 10, 14,   9, 14, 13,	// fata
 	    8, 11, 15,   8, 15, 12,	// spate
 		8,  9, 13,   8, 13, 12,	// stanga
 	   11, 10, 14,  11, 14, 15,	// dreapta
+
+	   // USA CASEI
+	   16, 17, 18, 19,
+
+	   // FERESTRELE CASEI
+	   20, 21, 22, 23,
+
+	   // HORNUL CASEI (paralelipiped)
+	   24, 25, 26,  24, 26, 27,  // baza inferioara
+	   28, 29, 30,  28, 30, 31,  // baza superioara
+	   25, 26, 30,  25, 30, 29,  // fata
+	   24, 27, 31,  24, 31, 28,  // spate
+	   24, 25, 29,  24, 29, 28,  // stanga
+	   27, 26, 30,  27, 30, 31  // dreapta
 	};
+
 
 	glGenVertexArrays(1, &VaoHouse);
 	glBindVertexArray(VaoHouse);
@@ -553,7 +602,7 @@ void Cleanup(void) {
 void Initialize(void) {
 	myMatrix = glm::mat4(1.0f);
 	matrRot = glm::rotate(glm::mat4(1.0f), PI / 8, glm::vec3(0.0, 0.0, 1.0));
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 
 	CreateVAOGround();
 	CreateVAOTreeTrunk();
@@ -608,7 +657,7 @@ void RenderFunction(void) {
 	glUniform3f(viewPosLocation, Obsx, Obsy, Obsz);
 
 	//  culoarea pentru ceata
-	glUniform3f(fogColorLocation, 0.5f, 0.5f, 0.5f);
+	glUniform3f(fogColorLocation, 0.8f, 0.8f, 0.8f);
 
 
 
@@ -700,12 +749,59 @@ void RenderFunction(void) {
 	// --- DESENARE CASA ---
 	glBindVertexArray(VaoHouse);
 
+	// desenare pereti + acoperis
 	myMatrix = glm::mat4(1.0f);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 
 	codCol = 0;
 	glUniform1i(codColLocation, codCol);
 
+	glDrawElements(GL_TRIANGLES, 72, GL_UNSIGNED_BYTE, 0);
+
+
+	// desenare usa
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, (GLvoid*)(72 * sizeof(GLubyte)));
+
+
+	// desenare ferestre
+	glLineWidth(5.0f);
+
+	// fereastra din stanga
+	codCol = 0;
+	glUniform1i(codColLocation, codCol);
+
+	myMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -200.0f, 0.0f));
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, (GLvoid*)(76 * sizeof(GLubyte)));
+
+	// fereastra din dreapta
+	codCol = 0;
+	glUniform1i(codColLocation, codCol);
+
+	myMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 200.0f, 0.0f));
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_BYTE, (GLvoid*)(76 * sizeof(GLubyte)));
+
+
+	// desenare horn
+	codCol = 0;
+	glUniform1i(codColLocation, codCol);
+
+	myMatrix = glm::mat4(1.0f);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, (GLvoid*)(80 * sizeof(GLubyte)));
+
+
+	// desenare umbra casa
+	myMatrix = glm::mat4(1.0f);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	codCol = 1;
+	glUniform1i(codColLocation, codCol);
+	
 	glDrawElements(GL_TRIANGLES, 72, GL_UNSIGNED_BYTE, 0);
 
 	glutSwapBuffers();
