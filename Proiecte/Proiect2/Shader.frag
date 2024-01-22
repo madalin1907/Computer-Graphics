@@ -47,7 +47,7 @@ void main(void) {
         vec3 emission = vec3(0.0, 0.0, 0.0);
         vec3 result = emission + (ambient + diffuse + specular) * ex_Color;
         
-        //result = mix(result, fogColor, fogAmount);  // adaugam efectul de ceata
+        result = mix(result, fogColor, fogAmount);  // adaugam efectul de ceata
 
 	    out_Color = vec4(result, 1.0f);
     }
@@ -55,10 +55,12 @@ void main(void) {
     // pentru codCol == 1 este desenata umbra
     if (codCol == 1) {
         vec3 shadowColor = vec3(0.1, 0.1, 0.1);
+        
+        // without fog
         out_Color = vec4(shadowColor, 1.0f);
         
-        // fog
-        //vec3 result = mix(shadowColor, fogColor, fogAmount);
-        //out_Color = vec4(result, 1.0);
+        // with fog
+        vec3 result = mix(shadowColor, fogColor, fogAmount);
+        out_Color = vec4(result, 1.0);
     }
 }
